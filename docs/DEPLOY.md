@@ -13,6 +13,8 @@ Expected layout:
   app/
   config/
     config.php        # generated during deploy, never committed
+  database/
+    schema.sql        # deployed outside web root for admin installer
   public/             # eging.rss7.net DocumentRoot
 ```
 
@@ -40,10 +42,10 @@ Production `config/config.php` is generated only inside the GitHub Actions runne
 1. Confirm the Lolipop subdomain DocumentRoot exactly.
 2. Confirm that DocumentRoot is the intended `.../public` directory.
 3. Create the MySQL database in Lolipop.
-4. Import `database/schema.sql`.
-5. Configure the production GitHub Environment.
-6. Generate the admin password hash with PHP `password_hash(..., PASSWORD_DEFAULT)` and save only the hash as `EGING_ADMIN_PASSWORD_HASH`.
-7. Run the deploy workflow manually.
+4. Configure the production GitHub Environment.
+5. Generate the admin password hash with PHP `password_hash(..., PASSWORD_DEFAULT)` and save only the hash as `EGING_ADMIN_PASSWORD_HASH`.
+6. Run the deploy workflow manually.
+7. Log in to `/admin/` and open `/admin/install.php` to create the tables.
 8. Verify:
    - `/`
    - `/health.php`
