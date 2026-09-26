@@ -31,3 +31,30 @@ jobs:
           test ! -f config/config.php
           ! grep -RIn --exclude='*.md' --exclude='config.example.php' 'LOLIPOP_FTP_PASSWORD=' app config public database
           ! grep -RIn --exclude='*.md' --exclude='config.example.php' 'DB_PASS=' app config public database
+
+
+  browser:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Playwright
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Start PHP server
+        run: |
+          php -S 127.0.0.1:8080 -t public >/tmp/eging-php.log 2>&1 &
+          echo $! >/tmp/eging-php.pid
+          for i in {1..20}; do
+            if curl --fail --silent http://127.0.0.1:8080/ >/dev/null; then
+              exit 0
+            fi
+            sleep 0.5
+          done
+          cat /tmp/eging-php.log
+          exit 1
+
+      - name: Browser smoke test
+        run: node .github/scripts/browser-smoke.mjs
