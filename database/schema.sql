@@ -1,0 +1,58 @@
+CREATE TABLE IF NOT EXISTS articles (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  slug VARCHAR(191) NOT NULL UNIQUE,
+  title VARCHAR(255) NOT NULL,
+  description TEXT NULL,
+  body LONGTEXT NOT NULL,
+  category VARCHAR(80) NOT NULL,
+  hero_image VARCHAR(255) NULL,
+  status ENUM('draft','published') NOT NULL DEFAULT 'draft',
+  published_at DATETIME NULL,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS gear_items (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  slug VARCHAR(191) NOT NULL UNIQUE,
+  type ENUM('egi','rod','reel','pe','leader','snap','landing','bag','light','lifejacket','other') NOT NULL,
+  brand VARCHAR(120) NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  summary TEXT NULL,
+  price_yen INT UNSIGNED NULL,
+  weight_g DECIMAL(8,2) NULL,
+  egi_size_min DECIMAL(4,2) NULL,
+  egi_size_max DECIMAL(4,2) NULL,
+  pe_min DECIMAL(4,2) NULL,
+  pe_max DECIMAL(4,2) NULL,
+  sink_sec_per_m DECIMAL(5,2) NULL,
+  tags JSON NULL,
+  specs JSON NULL,
+  affiliate JSON NULL,
+  source_url VARCHAR(500) NULL,
+  source_checked_at DATE NULL,
+  evidence_note TEXT NULL,
+  status ENUM('draft','published') NOT NULL DEFAULT 'draft',
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  INDEX(type),
+  INDEX(brand)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS simulator_rules (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  priority INT NOT NULL DEFAULT 100,
+  season VARCHAR(40) NULL,
+  field_type VARCHAR(40) NULL,
+  depth_band VARCHAR(40) NULL,
+  wind_band VARCHAR(40) NULL,
+  current_band VARCHAR(40) NULL,
+  target_size VARCHAR(40) NULL,
+  output JSON NOT NULL,
+  rationale TEXT NOT NULL,
+  source_note TEXT NULL,
+  enabled TINYINT(1) NOT NULL DEFAULT 1,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  INDEX(enabled, priority)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

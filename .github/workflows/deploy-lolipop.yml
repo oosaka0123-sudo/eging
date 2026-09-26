@@ -1,0 +1,73 @@
+name: Deploy to Lolipop
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    environment: production
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate deployment configuration
+        shell: bash
+        env:
+          FTP_HOST: ${{ secrets.LOLIPOP_FTP_HOST }}
+          FTP_USER: ${{ secrets.LOLIPOP_FTP_USER }}
+          FTP_PASSWORD: ${{ secrets.LOLIPOP_FTP_PASSWORD }}
+          DEPLOY_DIR: ${{ vars.LOLIPOP_DEPLOY_DIR }}
+          SITE_URL: ${{ vars.LOLIPOP_SITE_URL }}
+        run: |
+          set -euo pipefail
+          test -n "$FTP_HOST"
+          test -n "$FTP_USER"
+          test -n "$FTP_PASSWORD"
+          test -n "$DEPLOY_DIR"
+          test "$SITE_URL" = "https://eging.rss7.net"
+          case "$DEPLOY_DIR" in
+            */public|*/public/) ;;
+            *) echo "Refusing deploy: LOLIPOP_DEPLOY_DIR must be the verified eging public directory."; exit 1 ;;
+          esac
+
+      - name: PHP syntax check
+        run: |
+          find . -name '*.php' -not -path './.git/*' -print0 | xargs -0 -n1 php -l
+
+      - name: Install lftp
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq lftp
+
+      - name: Deploy site without destructive sync
+        shell: bash
+        env:
+          FTP_HOST: ${{ secrets.LOLIPOP_FTP_HOST }}
+          FTP_USER: ${{ secrets.LOLIPOP_FTP_USER }}
+          FTP_PASSWORD: ${{ secrets.LOLIPOP_FTP_PASSWORD }}
+          FTP_PORT: ${{ vars.LOLIPOP_FTP_PORT }}
+          DEPLOY_DIR: ${{ vars.LOLIPOP_DEPLOY_DIR }}
+        run: |
+          set -euo pipefail
+          PORT="${FTP_PORT:-21}"
+          lftp -u "$FTP_USER","$FTP_PASSWORD" -p "$PORT" "$FTP_HOST" <<EOF
+          set ftp:ssl-force true
+          set ftp:ssl-protect-data true
+          set ssl:verify-certificate yes
+          mkdir -p "$DEPLOY_DIR"
+          cd "$DEPLOY_DIR"
+          mirror -R --verbose --only-newer --parallel=2 public/ .
+          cd ..
+          mkdir -p app config
+          mirror -R --verbose --only-newer app/ app/
+          put config/config.example.php -o config/config.example.php
+          bye
+          EOF
+
+      - name: Verify public site
+        shell: bash
+        env:
+          SITE_URL: ${{ vars.LOLIPOP_SITE_URL }}
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error --location --retry 3 "$SITE_URL/" > /tmp/home.html
+          grep -q "EGING GEAR LAB" /tmp/home.html
+          curl --fail --silent --show-error --location "$SITE_URL/robots.txt" | grep -q "sitemap.php"
