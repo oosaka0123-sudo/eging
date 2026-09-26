@@ -1,4 +1,14 @@
 <?php
+$configFile=dirname(__DIR__).'/config/config.php';
+if(!is_file($configFile)){
+ http_response_code(503);
+ $pageTitle='準備中｜エギングギアラボ';
+ $pageDescription='記事データベースを準備中です。';
+ require __DIR__.'/partials/header.php';
+ echo '<main id="main"><section class="page-hero"><div><span class="kicker">CONTENT / PREPARING</span><h1>記事を、<br>準備中。</h1><p>CMSと商品データベースの本番接続後に公開します。</p></div></section></main>';
+ require __DIR__.'/partials/footer.php';
+ exit;
+}
 require dirname(__DIR__) . '/app/bootstrap.php';
 $slug=trim((string)($_GET['slug']??''));
 $stmt=$pdo->prepare("SELECT * FROM articles WHERE slug=? AND status='published' LIMIT 1");$stmt->execute([$slug]);$article=$stmt->fetch();
