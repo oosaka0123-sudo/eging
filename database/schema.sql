@@ -56,3 +56,15 @@ CREATE TABLE IF NOT EXISTS simulator_rules (
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   INDEX(enabled, priority)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+CREATE TABLE IF NOT EXISTS contact_messages (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(120) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  message TEXT NOT NULL,
+  ip_hash CHAR(64) NULL,
+  status ENUM('new','read','archived') NOT NULL DEFAULT 'new',
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  INDEX(status, created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
