@@ -86,8 +86,9 @@ jobs:
           cd "$DEPLOY_DIR"
           mirror -R --verbose --only-newer --parallel=2 public/ .
           cd ..
-          mkdir -p app config
+          mkdir -p app config database
           mirror -R --verbose --only-newer app/ app/
+          mirror -R --verbose --only-newer database/ database/
           put .runtime/config.php -o config/config.php
           bye
           EOF
