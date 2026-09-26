@@ -1,7 +1,18 @@
 <?php
 $pageTitle=$pageTitle??'エギングギアラボ';
 $pageDescription=$pageDescription??'条件から選ぶ、エギングギア。季節・潮・風・水深・地形から最適なタックルを逆引き。';
-$canonical='https://eging.rss7.net'.($_SERVER['REQUEST_URI']??'/');
+$requestUri=$_SERVER['REQUEST_URI']??'/';
+$parts=parse_url($requestUri);
+$path=$parts['path']??'/';
+$query=[];
+if (!empty($parts['query'])) {
+    parse_str($parts['query'],$query);
+}
+if ($path==='/article.php' && isset($query['slug'])) {
+    $canonical='https://eging.rss7.net/article.php?slug='.rawurlencode((string)$query['slug']);
+} else {
+    $canonical='https://eging.rss7.net'.$path;
+}
 ?><!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#061014"><title><?=htmlspecialchars($pageTitle,ENT_QUOTES,'UTF-8')?></title><meta name="description" content="<?=htmlspecialchars($pageDescription,ENT_QUOTES,'UTF-8')?>"><meta property="og:title" content="<?=htmlspecialchars($pageTitle,ENT_QUOTES,'UTF-8')?>"><meta property="og:description" content="<?=htmlspecialchars($pageDescription,ENT_QUOTES,'UTF-8')?>"><meta property="og:type" content="website"><meta property="og:url" content="<?=htmlspecialchars($canonical,ENT_QUOTES,'UTF-8')?>"><link rel="canonical" href="<?=htmlspecialchars($canonical,ENT_QUOTES,'UTF-8')?>"><meta name="twitter:card" content="summary_large_image"><link rel="stylesheet" href="/assets/css/site.css"></head><body>
 <a class="skip-link" href="#main">本文へ移動</a>
 <header class="site-header"><a class="brand" href="/">EGING GEAR LAB<small>CONDITION / GEAR / FIELD</small></a><nav class="desktop-nav" aria-label="メインナビ"><a href="/gear.php">GEAR</a><a href="/conditions.php">CONDITION</a><a href="/compare.php">COMPARE</a><a href="/guide.php">GUIDE</a><a href="/concept.php">CONCEPT</a></nav><button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="mobileMenu" aria-label="メニューを開く"><span></span></button></header>
