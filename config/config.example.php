@@ -1,6 +1,6 @@
 <?php
 return [
-    'app_url' => 'https://example.com',
+    'app_url' => 'https://eging.rss7.net',
     'db' => [
         'host' => 'mysql-host',
         'port' => 3306,
