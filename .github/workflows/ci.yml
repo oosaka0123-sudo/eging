@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  php:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: PHP syntax check
+        run: find . -name '*.php' -not -path './.git/*' -print0 | xargs -0 -n1 php -l
+      - name: Required production files
+        run: |
+          test -f public/index.php
+          test -f public/health.php
+          test -f public/robots.txt
+          test -f public/sitemap.php
+          test -f public/.htaccess
+          test -f database/schema.sql
+          test -f config/config.example.php
+      - name: Guard against committed production secrets
+        shell: bash
+        run: |
+          set -euo pipefail
+          test ! -f config/config.php
+          ! grep -RIn --exclude='*.md' --exclude='config.example.php' -E 'DB_PASS=.+|LOLIPOP_FTP_PASSWORD=.+|admin_password_hash.*\$2[aby]\$' .
