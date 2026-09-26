@@ -3,22 +3,16 @@
 ## Production URL
 - https://eging.rss7.net
 
-## Required server files
-The repository intentionally does not store production secrets.
+## Server layout
+The verified subdomain DocumentRoot must point to the repository's `public/` directory.
 
-Create on the server:
-- `config/config.php` based on `config/config.example.php`
-- MySQL database using `database/schema.sql`
-
-The production layout assumes the verified subdomain DocumentRoot points to the repository's `public/` directory. Do not guess this path.
-
-Expected server layout:
+Expected layout:
 
 ```
 <project-root>/
   app/
   config/
-    config.php        # production secret file, never commit
+    config.php        # generated during deploy, never committed
   public/             # eging.rss7.net DocumentRoot
 ```
 
@@ -29,26 +23,32 @@ Environment: `production`
 - `LOLIPOP_FTP_HOST`
 - `LOLIPOP_FTP_USER`
 - `LOLIPOP_FTP_PASSWORD`
+- `LOLIPOP_DB_HOST`
+- `LOLIPOP_DB_NAME`
+- `LOLIPOP_DB_USER`
+- `LOLIPOP_DB_PASSWORD`
+- `EGING_ADMIN_PASSWORD_HASH`
 
 ### Variables
 - `LOLIPOP_SITE_URL=https://eging.rss7.net`
 - `LOLIPOP_FTP_PORT=21`
 - `LOLIPOP_DEPLOY_DIR` = verified path ending in `/public`
 
-Do not commit any secret values.
+Production `config/config.php` is generated only inside the GitHub Actions runner from Environment secrets, uploaded to the server, and never committed.
 
-## Before first production deploy
+## First deploy
 1. Confirm the Lolipop subdomain DocumentRoot exactly.
 2. Confirm that DocumentRoot is the intended `.../public` directory.
-3. Create/import the MySQL database with `database/schema.sql`.
-4. Create `config/config.php` with DB credentials and a password hash.
-5. Configure the production GitHub Environment secrets/variables.
-6. Run the deploy workflow manually.
-7. Verify:
+3. Create the MySQL database in Lolipop.
+4. Import `database/schema.sql`.
+5. Configure the production GitHub Environment.
+6. Generate the admin password hash with PHP `password_hash(..., PASSWORD_DEFAULT)` and save only the hash as `EGING_ADMIN_PASSWORD_HASH`.
+7. Run the deploy workflow manually.
+8. Verify:
    - `/`
    - `/health.php`
    - `/robots.txt`
    - `/sitemap.php`
    - `/admin/login.php`
 
-The workflow intentionally does not use destructive delete sync.
+The workflow intentionally uses non-destructive upload and refuses deployment unless the directory ends in `/public`.
