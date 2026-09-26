@@ -3,4 +3,4 @@ Allow: /
 Disallow: /admin/
 Disallow: /config/
 Disallow: /app/
-Sitemap: https://example.com/sitemap.php
+Sitemap: https://eging.rss7.net/sitemap.php
