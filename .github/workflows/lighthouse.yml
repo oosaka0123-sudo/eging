@@ -24,5 +24,36 @@ jobs:
       - name: Install Lighthouse CI
         run: npm install --no-save @lhci/cli@0.14.0
 
-      - name: Run Lighthouse
-        run: npx lhci autorun --config=.lighthouserc.json
+      - name: Collect Lighthouse
+        run: npx lhci collect --config=.lighthouserc.json
+
+      - name: Print Lighthouse metrics
+        shell: bash
+        run: |
+          node - <<'NODE'
+          const fs=require('fs');
+          const path=require('path');
+          const dir='.lighthouseci';
+          const files=fs.readdirSync(dir).filter(f=>f.startsWith('lhr-')&&f.endsWith('.json'));
+          for(const file of files){
+            const r=JSON.parse(fs.readFileSync(path.join(dir,file),'utf8'));
+            const c=r.categories;
+            const a=r.audits;
+            const score=x=>Math.round((c[x]?.score||0)*100);
+            console.log(JSON.stringify({
+              url:r.finalUrl,
+              performance:score('performance'),
+              accessibility:score('accessibility'),
+              bestPractices:score('best-practices'),
+              seo:score('seo'),
+              fcp:a['first-contentful-paint']?.displayValue,
+              lcp:a['largest-contentful-paint']?.displayValue,
+              tbt:a['total-blocking-time']?.displayValue,
+              cls:a['cumulative-layout-shift']?.displayValue,
+              speedIndex:a['speed-index']?.displayValue
+            }));
+          }
+          NODE
+
+      - name: Assert Lighthouse thresholds
+        run: npx lhci assert --config=.lighthouserc.json
