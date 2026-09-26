@@ -6,7 +6,7 @@ $schemaFile = dirname(__DIR__, 2) . '/database/schema.sql';
 $message = '';
 $error = '';
 
-$requiredTables = ['articles','gear_items','simulator_rules'];
+$requiredTables = ['articles','gear_items','simulator_rules','contact_messages'];
 
 function table_exists(PDO $pdo, string $table): bool {
     $stmt = $pdo->prepare('SHOW TABLES LIKE ?');
