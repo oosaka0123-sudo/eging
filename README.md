@@ -30,3 +30,9 @@ ai-master/WEB_DEVELOPMENT.mdではコンテンツ中心の新規サイトはAstr
 
 ## Security
 Secrets and credentials must never be committed. Production DB/FTP credentials use server-side config or GitHub Secrets.
+
+
+## Production release
+本番公開は、先に `Production Preflight` workflow を手動実行して FTPS / MySQL / production Environment 設定を非破壊で確認する。
+Preflight成功後にのみ `Deploy to Lolipop` を手動実行する。
+詳細は `docs/DEPLOY.md` を参照。
