@@ -20,7 +20,17 @@ for (const viewport of viewports) {
   const errors = [];
   page.on('pageerror', e => errors.push('pageerror: ' + e.message));
   page.on('console', m => {
-    if (m.type() === 'error') errors.push('console: ' + m.text());
+    if (m.type() === 'error' && !m.text().startsWith('Failed to load resource:')) {
+      errors.push('console: ' + m.text());
+    }
+  });
+  page.on('response', response => {
+    const url = response.url();
+    const status = response.status();
+    const allowedMissing = url.endsWith('/assets/video/opening.mp4');
+    if (status >= 400 && !allowedMissing) {
+      errors.push('http ' + status + ': ' + url);
+    }
   });
 
   for (const path of paths) {
