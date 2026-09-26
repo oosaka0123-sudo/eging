@@ -18,11 +18,11 @@
 ai-master/WEB_DEVELOPMENT.mdではコンテンツ中心の新規サイトはAstroがDEFAULTだが、本ProjectはCMSからの商品データ更新、条件検索、比較データ、シミュレーターとの即時連携を主要要件とする。Lolipop Light上で編集後の再ビルド依存を避けるため、PHP + MySQLの動的構成を採用する。
 
 ## Core content
-- /gear/ エギ・ロッド・リール・ライン・小物
-- /condition/ 春・秋・潮・風・月・水深・地形
-- /review/ 個別レビュー
-- /compare/ 比較
-- /simulator/ 条件逆引きタックル診断
+- /gear.php エギ・ロッド・リール・ライン・小物
+- /conditions.php 春・秋・潮・風・水深・地形
+- /article.php?slug=... CMS記事
+- /compare.php 比較
+- /simulator.php 条件逆引きタックル診断
 - /admin/ CMS
 
 ## Revenue flow
