@@ -60,18 +60,25 @@ AND (target_size IS NULL OR target_size = :target_size)
 AND (time_of_day IS NULL OR time_of_day = :time_of_day)
 ORDER BY priority ASC, id ASC
 LIMIT 1";
-$stmt = $pdo->prepare($sql);
-$stmt->execute([
-    ':season' => $input['season'],
-    ':field_type' => $input['field_type'],
-    ':depth_band' => $input['depth_band'],
-    ':wind_band' => $input['wind_band'],
-    ':current_band' => $currentBand,
-    ':tide_phase' => $input['tide_phase'],
-    ':target_size' => $input['target_size'],
-    ':time_of_day' => $input['time_of_day'],
-]);
-$row = $stmt->fetch();
+try {
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([
+        ':season' => $input['season'],
+        ':field_type' => $input['field_type'],
+        ':depth_band' => $input['depth_band'],
+        ':wind_band' => $input['wind_band'],
+        ':current_band' => $currentBand,
+        ':tide_phase' => $input['tide_phase'],
+        ':target_size' => $input['target_size'],
+        ':time_of_day' => $input['time_of_day'],
+    ]);
+    $row = $stmt->fetch();
+} catch (Throwable $e) {
+    error_log('EGING simulate query error: '.$e->getMessage());
+    http_response_code(503);
+    echo json_encode(['error'=>'service_unavailable'], JSON_UNESCAPED_UNICODE);
+    exit;
+}
 if (!$row) {
     http_response_code(404);
     echo json_encode(['error' => 'no_rule'], JSON_UNESCAPED_UNICODE);
