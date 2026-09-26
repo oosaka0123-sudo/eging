@@ -1,0 +1,3 @@
+<?php $pageTitle='404｜エギングギアラボ';$pageDescription='ページが見つかりません。';require __DIR__.'/partials/header.php';?>
+<main id="main"><section class="page-hero"><img class="page-art" src="/assets/visuals/conditions-map.svg" alt=""><div><span class="kicker">404 / OFF THE MAP</span><h1>その条件は、<br>見つからない。</h1><p>ページが移動したか、URLが正しくない可能性があります。海況を読み直すように、入口から探し直してください。</p><div class="hero__actions"><a class="cta cta--primary" href="/">HOMEへ戻る</a><a class="cta" href="/conditions.php">条件から探す</a></div></div></section></main>
+<?php require __DIR__.'/partials/footer.php';?>
