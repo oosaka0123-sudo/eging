@@ -37,15 +37,35 @@ for (const viewport of viewports) {
     errors.length = 0;
     const response = await page.goto(base + path, { waitUntil: 'domcontentloaded' });
     const status = response?.status() ?? 0;
-    const h1 = await page.locator('h1').count();
-    const overflow = await page.evaluate(
-      () => document.documentElement.scrollWidth > document.documentElement.clientWidth + 2
-    );
+    const audit = await page.evaluate(() => {
+      const title = document.title.trim();
+      const description = document.querySelector('meta[name="description"]')?.getAttribute('content')?.trim() || '';
+      const canonical = document.querySelector('link[rel="canonical"]')?.getAttribute('href') || '';
+      const manifest = document.querySelector('link[rel="manifest"]')?.getAttribute('href') || '';
+      const h1 = document.querySelectorAll('h1').length;
+      const unlabeledImages = [...document.querySelectorAll('img')].filter(img => !img.hasAttribute('alt')).length;
+      const invalidFormControls = [...document.querySelectorAll('input:not([type="hidden"]), textarea, select')].filter(el => {
+        if (el.getAttribute('aria-hidden') === 'true') return false;
+        const id = el.id;
+        return !el.closest('label') && !(id && document.querySelector('label[for="' + CSS.escape(id) + '"]')) && !el.getAttribute('aria-label');
+      }).length;
+      const overflow = document.documentElement.scrollWidth > document.documentElement.clientWidth + 2;
+      return { title, description, canonical, manifest, h1, unlabeledImages, invalidFormControls, overflow };
+    });
 
-    if (status >= 500 || h1 < 1 || overflow || errors.length) {
+    const semanticError =
+      !audit.title ||
+      !audit.description ||
+      !audit.canonical.startsWith('https://eging.rss7.net') ||
+      audit.manifest !== '/manifest.webmanifest' ||
+      audit.h1 < 1 ||
+      audit.unlabeledImages > 0 ||
+      audit.invalidFormControls > 0;
+
+    if (status >= 500 || audit.overflow || semanticError || errors.length) {
       failed = true;
       console.error(JSON.stringify({
-        viewport: viewport.name, path, status, h1, overflow, errors
+        viewport: viewport.name, path, status, audit, errors
       }));
     }
   }
