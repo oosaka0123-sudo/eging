@@ -1,0 +1,20 @@
+name: Production Monitor
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 */6 * * *"
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check production
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE="https://eging.rss7.net"
+          curl --fail --silent --show-error --location --retry 2 "$BASE/health.php" | grep -q '"ok":true'
+          curl --fail --silent --show-error --location --retry 2 "$BASE/" | grep -q "EGING GEAR LAB"
+          curl --fail --silent --show-error --location --retry 2 "$BASE/robots.txt" | grep -q "sitemap.php"
+          curl --fail --silent --show-error --location --retry 2 "$BASE/sitemap.php" | grep -q "<urlset"
