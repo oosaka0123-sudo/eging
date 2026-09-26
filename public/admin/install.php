@@ -14,6 +14,27 @@ function table_exists(PDO $pdo, string $table): bool {
     return (bool)$stmt->fetchColumn();
 }
 
+function column_exists(PDO $pdo, string $table, string $column): bool {
+    $stmt = $pdo->prepare("SHOW COLUMNS FROM `$table` LIKE ?");
+    $stmt->execute([$column]);
+    return (bool)$stmt->fetchColumn();
+}
+
+function ensure_simulator_columns(PDO $pdo): void {
+    if (!table_exists($pdo, 'simulator_rules')) {
+        return;
+    }
+    $columns = [
+        'tide_phase' => "ALTER TABLE simulator_rules ADD COLUMN tide_phase VARCHAR(40) NULL AFTER current_band",
+        'time_of_day' => "ALTER TABLE simulator_rules ADD COLUMN time_of_day VARCHAR(40) NULL AFTER target_size",
+    ];
+    foreach ($columns as $column => $sql) {
+        if (!column_exists($pdo, 'simulator_rules', $column)) {
+            $pdo->exec($sql);
+        }
+    }
+}
+
 $status = [];
 foreach ($requiredTables as $table) {
     $status[$table] = table_exists($pdo, $table);
@@ -37,7 +58,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $pdo->exec($statement);
                 }
             }
-            $message = 'データベース初期化が完了しました。';
+            ensure_simulator_columns($pdo);
+            $message = 'データベース初期化・更新が完了しました。';
             foreach ($requiredTables as $table) {
                 $status[$table] = table_exists($pdo, $table);
             }
@@ -48,7 +70,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$allReady = !in_array(false, $status, true);
+if (table_exists($pdo, 'simulator_rules')) {
+    ensure_simulator_columns($pdo);
+}
+$allReady = !in_array(false, $status, true)
+    && column_exists($pdo, 'simulator_rules', 'tide_phase')
+    && column_exists($pdo, 'simulator_rules', 'time_of_day');
 ?>
 <!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>初期セットアップ</title>
 <style>body{font-family:system-ui;background:#f4f5f6;margin:0}main{max-width:760px;margin:auto;padding:20px}.panel{background:#fff;border:1px solid #ddd;border-radius:12px;padding:18px;margin:20px 0}.ok{color:#087f5b}.ng{color:#c92a2a}button{padding:12px 16px;font:inherit}</style></head>
