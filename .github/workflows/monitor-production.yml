@@ -2,8 +2,6 @@ name: Production Monitor
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "17 */6 * * *"
 
 jobs:
   monitor:
