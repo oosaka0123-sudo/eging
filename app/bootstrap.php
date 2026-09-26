@@ -21,13 +21,21 @@ $pdo = new PDO($dsn, $config['db']['user'], $config['db']['pass'], [
 ]);
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
+    ini_set('session.use_strict_mode', '1');
+    ini_set('session.use_only_cookies', '1');
     session_name('eging_admin');
     session_set_cookie_params([
         'httponly' => true,
         'secure' => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
         'samesite' => 'Lax',
+        'path' => '/',
     ]);
     session_start();
+}
+
+if (str_starts_with((string)($_SERVER['REQUEST_URI'] ?? ''), '/admin/')) {
+    header('Cache-Control: no-store, private');
+    header('Pragma: no-cache');
 }
 
 function require_admin(): void {
