@@ -18,12 +18,16 @@ jobs:
           FTP_PASSWORD: ${{ secrets.LOLIPOP_FTP_PASSWORD }}
           DEPLOY_DIR: ${{ vars.LOLIPOP_DEPLOY_DIR }}
           SITE_URL: ${{ vars.LOLIPOP_SITE_URL }}
+          DB_HOST: ${{ secrets.LOLIPOP_DB_HOST }}
+          DB_NAME: ${{ secrets.LOLIPOP_DB_NAME }}
+          DB_USER: ${{ secrets.LOLIPOP_DB_USER }}
+          DB_PASSWORD: ${{ secrets.LOLIPOP_DB_PASSWORD }}
+          ADMIN_PASSWORD_HASH: ${{ secrets.EGING_ADMIN_PASSWORD_HASH }}
         run: |
           set -euo pipefail
-          test -n "$FTP_HOST"
-          test -n "$FTP_USER"
-          test -n "$FTP_PASSWORD"
-          test -n "$DEPLOY_DIR"
+          for v in FTP_HOST FTP_USER FTP_PASSWORD DEPLOY_DIR SITE_URL DB_HOST DB_NAME DB_USER DB_PASSWORD ADMIN_PASSWORD_HASH; do
+            test -n "${!v}"
+          done
           test "$SITE_URL" = "https://eging.rss7.net"
           case "$DEPLOY_DIR" in
             */public|*/public/) ;;
@@ -31,8 +35,34 @@ jobs:
           esac
 
       - name: PHP syntax check
+        run: find . -name '*.php' -not -path './.git/*' -print0 | xargs -0 -n1 php -l
+
+      - name: Build runtime config
+        shell: bash
+        env:
+          DB_HOST: ${{ secrets.LOLIPOP_DB_HOST }}
+          DB_NAME: ${{ secrets.LOLIPOP_DB_NAME }}
+          DB_USER: ${{ secrets.LOLIPOP_DB_USER }}
+          DB_PASSWORD: ${{ secrets.LOLIPOP_DB_PASSWORD }}
+          ADMIN_PASSWORD_HASH: ${{ secrets.EGING_ADMIN_PASSWORD_HASH }}
         run: |
-          find . -name '*.php' -not -path './.git/*' -print0 | xargs -0 -n1 php -l
+          set -euo pipefail
+          mkdir -p .runtime
+          php -r '
+          $cfg = [
+            "app_url" => "https://eging.rss7.net",
+            "db" => [
+              "host" => getenv("DB_HOST"),
+              "port" => 3306,
+              "name" => getenv("DB_NAME"),
+              "user" => getenv("DB_USER"),
+              "pass" => getenv("DB_PASSWORD"),
+            ],
+            "admin_password_hash" => getenv("ADMIN_PASSWORD_HASH"),
+          ];
+          file_put_contents(".runtime/config.php", "<?php\nreturn " . var_export($cfg, true) . ";\n");
+          '
+          php -l .runtime/config.php
 
       - name: Install lftp
         run: sudo apt-get update -qq && sudo apt-get install -y -qq lftp
@@ -58,7 +88,7 @@ jobs:
           cd ..
           mkdir -p app config
           mirror -R --verbose --only-newer app/ app/
-          put config/config.example.php -o config/config.example.php
+          put .runtime/config.php -o config/config.php
           bye
           EOF
 
@@ -68,6 +98,7 @@ jobs:
           SITE_URL: ${{ vars.LOLIPOP_SITE_URL }}
         run: |
           set -euo pipefail
+          curl --fail --silent --show-error --location --retry 3 "$SITE_URL/health.php" | grep -q '"ok":true'
           curl --fail --silent --show-error --location --retry 3 "$SITE_URL/" > /tmp/home.html
           grep -q "EGING GEAR LAB" /tmp/home.html
           curl --fail --silent --show-error --location "$SITE_URL/robots.txt" | grep -q "sitemap.php"
