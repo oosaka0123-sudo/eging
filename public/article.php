@@ -2,10 +2,10 @@
 $configFile=dirname(__DIR__).'/config/config.php';
 if(!is_file($configFile)){
  http_response_code(503);
- $pageTitle='準備中｜エギングギアラボ';
- $pageDescription='記事データベースを準備中です。';
+ $pageTitle='記事サービスを利用できません｜エギングギアラボ';
+ $pageDescription='現在、記事サービスを利用できません。';
  require __DIR__.'/partials/header.php';
- echo '<main id="main"><section class="page-hero"><div><span class="kicker">CONTENT / PREPARING</span><h1>記事を、<br>準備中。</h1><p>CMSと商品データベースの本番接続後に公開します。</p></div></section></main>';
+ echo '<main id="main"><section class="page-hero"><div><span class="kicker">503 / CONTENT</span><h1>記事サービスを、<br>利用できません。</h1><p>一時的にデータベースへ接続できません。時間をおいて再度お試しください。</p></div></section></main>';
  require __DIR__.'/partials/footer.php';
  exit;
 }
