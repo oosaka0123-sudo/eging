@@ -26,7 +26,9 @@ $allowed = [
     'field_type' => ['port','rock','surf'],
     'depth_band' => ['shallow','mid','deep'],
     'wind_band' => ['low','mid','strong'],
-    'current_band' => ['slow','normal','fast'],
+    'tide_phase' => ['rising','falling','slack'],
+    'target_size' => ['small','medium','large'],
+    'time_of_day' => ['dawn','day','dusk','night'],
 ];
 foreach ($allowed as $key => $values) {
     if (!isset($input[$key]) || !in_array($input[$key], $values, true)) {
@@ -34,6 +36,15 @@ foreach ($allowed as $key => $values) {
         echo json_encode(['error' => 'invalid_condition', 'field' => $key], JSON_UNESCAPED_UNICODE);
         exit;
     }
+}
+$currentBand = null;
+if (isset($input['current_band']) && $input['current_band'] !== '') {
+    if (!in_array($input['current_band'], ['slow','normal','fast'], true)) {
+        http_response_code(422);
+        echo json_encode(['error' => 'invalid_condition', 'field' => 'current_band'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+    $currentBand = $input['current_band'];
 }
 
 $sql = "SELECT output, rationale
@@ -44,17 +55,30 @@ AND (field_type IS NULL OR field_type = :field_type)
 AND (depth_band IS NULL OR depth_band = :depth_band)
 AND (wind_band IS NULL OR wind_band = :wind_band)
 AND (current_band IS NULL OR current_band = :current_band)
+AND (tide_phase IS NULL OR tide_phase = :tide_phase)
+AND (target_size IS NULL OR target_size = :target_size)
+AND (time_of_day IS NULL OR time_of_day = :time_of_day)
 ORDER BY priority ASC, id ASC
 LIMIT 1";
-$stmt = $pdo->prepare($sql);
-$stmt->execute([
-    ':season' => $input['season'],
-    ':field_type' => $input['field_type'],
-    ':depth_band' => $input['depth_band'],
-    ':wind_band' => $input['wind_band'],
-    ':current_band' => $input['current_band'],
-]);
-$row = $stmt->fetch();
+try {
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([
+        ':season' => $input['season'],
+        ':field_type' => $input['field_type'],
+        ':depth_band' => $input['depth_band'],
+        ':wind_band' => $input['wind_band'],
+        ':current_band' => $currentBand,
+        ':tide_phase' => $input['tide_phase'],
+        ':target_size' => $input['target_size'],
+        ':time_of_day' => $input['time_of_day'],
+    ]);
+    $row = $stmt->fetch();
+} catch (Throwable $e) {
+    error_log('EGING simulate query error: '.$e->getMessage());
+    http_response_code(503);
+    echo json_encode(['error'=>'service_unavailable'], JSON_UNESCAPED_UNICODE);
+    exit;
+}
 if (!$row) {
     http_response_code(404);
     echo json_encode(['error' => 'no_rule'], JSON_UNESCAPED_UNICODE);
