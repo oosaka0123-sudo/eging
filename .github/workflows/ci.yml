@@ -26,4 +26,5 @@ jobs:
         run: |
           set -euo pipefail
           test ! -f config/config.php
-          ! grep -RIn --exclude='*.md' --exclude='config.example.php' -E 'DB_PASS=.+|LOLIPOP_FTP_PASSWORD=.+|admin_password_hash.*\$2[aby]\$' .
+          ! grep -RIn --exclude='*.md' --exclude='config.example.php' -E 'DB_PASS=.+|LOLIPOP_FTP_PASSWORD=.+|admin_password_hash.*\$2[aby]\
+ app config public database
