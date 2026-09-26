@@ -5,10 +5,17 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
   if(!is_file($configFile)){http_response_code(503);$error='現在、お問い合わせを受け付けられません。';}
   elseif(!empty($_POST['website']??'')){$sent=true;}
   else{
-    require dirname(__DIR__).'/app/bootstrap.php';
+    try{
+      require dirname(__DIR__).'/app/bootstrap.php';
+    }catch(Throwable $e){
+      error_log('EGING contact bootstrap error: '.$e->getMessage());
+      http_response_code(503);
+      $error='現在、お問い合わせを受け付けられません。時間をおいて再度お試しください。';
+    }
     $name=trim((string)($_POST['name']??''));$email=trim((string)($_POST['email']??''));$message=trim((string)($_POST['message']??''));
-    if($name===''||!filter_var($email,FILTER_VALIDATE_EMAIL)||mb_strlen($message)<10){$error='入力内容を確認してください。';}
-    else{
+    if($error===''){
+      if($name===''||!filter_var($email,FILTER_VALIDATE_EMAIL)||mb_strlen($message)<10){$error='入力内容を確認してください。';}
+      else{
       $ip=(string)($_SERVER['REMOTE_ADDR']??'');
       $hash=$ip!==''?hash('sha256',$ip):null;
       if($hash){
@@ -19,6 +26,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
       if($error===''){
         $stmt=$pdo->prepare("INSERT INTO contact_messages(name,email,message,ip_hash) VALUES(?,?,?,?)");
         $stmt->execute([$name,$email,$message,$hash]);$sent=true;
+      }
       }
     }
   }

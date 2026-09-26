@@ -1,6 +1,19 @@
 <?php
-require dirname(__DIR__, 2) . '/app/bootstrap.php';
 header('Content-Type: application/json; charset=utf-8');
+$configFile=dirname(__DIR__,2).'/config/config.php';
+if(!is_file($configFile)){
+    http_response_code(503);
+    echo json_encode(['error'=>'service_unavailable'], JSON_UNESCAPED_UNICODE);
+    exit;
+}
+try{
+    require dirname(__DIR__, 2) . '/app/bootstrap.php';
+}catch(Throwable $e){
+    error_log('EGING simulate bootstrap error: '.$e->getMessage());
+    http_response_code(503);
+    echo json_encode(['error'=>'service_unavailable'], JSON_UNESCAPED_UNICODE);
+    exit;
+}
 
 $input = json_decode(file_get_contents('php://input'), true);
 if (!is_array($input)) {
