@@ -1,0 +1,17 @@
+{
+  "name": "エギングギアラボ",
+  "short_name": "EGING GEAR LAB",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#061014",
+  "theme_color": "#061014",
+  "lang": "ja",
+  "icons": [
+    {
+      "src": "/assets/brand/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
