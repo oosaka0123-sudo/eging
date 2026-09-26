@@ -11,8 +11,15 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
     else{
       $ip=(string)($_SERVER['REMOTE_ADDR']??'');
       $hash=$ip!==''?hash('sha256',$ip):null;
-      $stmt=$pdo->prepare("INSERT INTO contact_messages(name,email,message,ip_hash) VALUES(?,?,?,?)");
-      $stmt->execute([$name,$email,$message,$hash]);$sent=true;
+      if($hash){
+        $rate=$pdo->prepare("SELECT COUNT(*) FROM contact_messages WHERE ip_hash=? AND created_at > (NOW() - INTERVAL 10 MINUTE)");
+        $rate->execute([$hash]);
+        if((int)$rate->fetchColumn()>=3){$error='短時間に送信回数が多すぎます。しばらくしてから再度お試しください。';}
+      }
+      if($error===''){
+        $stmt=$pdo->prepare("INSERT INTO contact_messages(name,email,message,ip_hash) VALUES(?,?,?,?)");
+        $stmt->execute([$name,$email,$message,$hash]);$sent=true;
+      }
     }
   }
 }
