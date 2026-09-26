@@ -1,0 +1,28 @@
+name: Lighthouse Quality
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build local opening movie
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+          mkdir -p public/assets/video
+          ffmpeg -hide_banner -loglevel error -y \
+            -f lavfi -i "color=c=0x061014:s=1280x720:r=24:d=2.2" \
+            -vf "noise=alls=7:allf=t+u,drawgrid=w=128:h=72:t=1:c=0x65f5db@0.08,vignette=PI/5,fade=t=in:st=0:d=.35,fade=t=out:st=1.85:d=.35" \
+            -an -c:v libx264 -preset veryslow -crf 28 -pix_fmt yuv420p -movflags +faststart \
+            public/assets/video/opening.mp4
+
+      - name: Install Lighthouse CI
+        run: npm install --no-save @lhci/cli@0.14.0
+
+      - name: Run Lighthouse
+        run: npx lhci autorun --config=.lighthouserc.json
