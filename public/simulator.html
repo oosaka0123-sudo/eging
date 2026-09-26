@@ -34,15 +34,26 @@ button{margin-top:16px;width:100%;font-weight:800;cursor:pointer}
 </main>
 <script>
 const form=document.querySelector('#sim'),out=document.querySelector('#result');
-form.addEventListener('submit',e=>{
+form.addEventListener('submit',async e=>{
  e.preventDefault();
- const d=new FormData(form),season=d.get('season'),field=d.get('field'),depth=d.get('depth'),wind=d.get('wind'),current=d.get('current');
- let rod='ML〜M / 8.3〜8.6ft',egi=season==='autumn'?'2.5〜3.0号':'3.5号',pe=season==='autumn'?'0.5〜0.6号':'0.6〜0.8号',leader='1.75〜2.5号',note=[];
- if(field==='rock'){rod='M中心 / 8.6〜9ft';note.push('足場と取り回しより遠投・主導権を優先');}
- if(field==='surf'){rod='M中心 / 8.6〜9ft';note.push('飛距離を取りやすい長さを優先');}
- if(depth==='deep'||current==='fast'){egi=season==='autumn'?'3.0号ディープ寄り':'3.5号ディープ寄り';note.push('底取りを優先して沈下速度を上げる');}
- if(wind==='strong'){pe=season==='autumn'?'0.5〜0.6号':'0.6号前後';note.push('風の影響を抑えるため太くし過ぎない');}
- out.innerHTML='<strong>基準タックル</strong><br>ロッド: '+rod+'<br>エギ: '+egi+'<br>PE: '+pe+'<br>リーダー: '+leader+'<br><small>'+ (note.length?note.join('／'):'標準条件。操作性と汎用性を優先。') +'</small>';
+ const d=new FormData(form);
+ out.textContent='診断中…';
+ const payload={
+   season:d.get('season'),
+   field_type:d.get('field'),
+   depth_band:d.get('depth'),
+   wind_band:d.get('wind'),
+   current_band:d.get('current')
+ };
+ try{
+   const res=await fetch('/api/simulate.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+   const data=await res.json();
+   if(!res.ok) throw new Error(data.error||'診断できませんでした');
+   const o=data.output||{};
+   out.innerHTML='<strong>基準タックル</strong><br>ロッド: '+(o.rod||'—')+'<br>エギ: '+(o.egi||'—')+'<br>PE: '+(o.pe||'—')+'<br>リーダー: '+(o.leader||'—')+'<br><small>'+(data.rationale||'')+'</small>';
+ }catch(err){
+   out.textContent='現在この条件の診断データを準備中です。';
+ }
 });
 </script>
 </body>
