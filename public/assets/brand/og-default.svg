@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="t d">
+<title id="t">EGING GEAR LAB</title>
+<desc id="d">条件から選ぶ、エギングギア。エギの輪郭と深海の等深線を重ねたソーシャルプレビュー。</desc>
+<defs><radialGradient id="g" cx="72%" cy="30%" r="72%"><stop offset="0" stop-color="#17444c"/><stop offset=".52" stop-color="#0b2630"/><stop offset="1" stop-color="#061014"/></radialGradient></defs>
+<rect width="1200" height="630" fill="url(#g)"/>
+<g fill="none" stroke="#65f5db" stroke-opacity=".16"><path d="M-20 470C220 340 350 560 620 420s390-120 620-10"/><path d="M-20 520C250 390 380 600 660 465s380-100 590-20"/></g>
+<g transform="translate(770 120) rotate(-14)" fill="none" stroke-linecap="round"><path d="M0 145C48 60 122 18 208 0c78 37 137 94 163 172-47 64-129 104-220 110-76-20-132-68-151-137Z" stroke="#e8f5f2" stroke-opacity=".72" stroke-width="2.5"/><path d="M50 150c70-32 150-38 270-12" stroke="#b7ff4a" stroke-width="3"/><circle cx="62" cy="151" r="7" fill="#b7ff4a"/><path d="M335 148l62 34-67 8" stroke="#65f5db" stroke-width="2.5"/></g>
+<text x="74" y="150" fill="#65f5db" font-family="Arial, sans-serif" font-size="18" letter-spacing="5">CONDITION / GEAR / FIELD</text>
+<text x="68" y="270" fill="#e8f5f2" font-family="Arial, sans-serif" font-weight="700" font-size="78" letter-spacing="-3">EGING GEAR LAB</text>
+<text x="72" y="345" fill="#b7ff4a" font-family="sans-serif" font-weight="700" font-size="42">条件から選ぶ、エギングギア。</text>
+<text x="74" y="410" fill="#91aaa9" font-family="sans-serif" font-size="24">季節・潮・風・水深・地形から、必要なスペックを逆引き。</text>
+</svg>

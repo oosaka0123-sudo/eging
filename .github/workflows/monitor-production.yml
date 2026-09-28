@@ -14,5 +14,5 @@ jobs:
           BASE="https://eging.rss7.net"
           curl --fail --silent --show-error --location --retry 2 "$BASE/health.php" | grep -q '"ok":true'
           curl --fail --silent --show-error --location --retry 2 "$BASE/" | grep -q "EGING GEAR LAB"
-          curl --fail --silent --show-error --location --retry 2 "$BASE/robots.txt" | grep -q "sitemap.php"
-          curl --fail --silent --show-error --location --retry 2 "$BASE/sitemap.php" | grep -q "<urlset"
+          curl --fail --silent --show-error --location --retry 2 "$BASE/robots.txt" | grep -q "sitemap.xml"
+          curl --fail --silent --show-error --location --retry 2 "$BASE/sitemap.xml" | grep -q "<urlset"
