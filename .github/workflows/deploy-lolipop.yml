@@ -17,6 +17,7 @@ jobs:
           FTP_USER: ${{ secrets.LOLIPOP_FTP_USER }}
           FTP_PASSWORD: ${{ secrets.LOLIPOP_FTP_PASSWORD }}
           DEPLOY_DIR: ${{ vars.LOLIPOP_DEPLOY_DIR }}
+          PRIVATE_DIR: ${{ vars.LOLIPOP_PRIVATE_DIR }}
           SITE_URL: ${{ vars.LOLIPOP_SITE_URL }}
           DB_HOST: ${{ secrets.LOLIPOP_DB_HOST }}
           DB_NAME: ${{ secrets.LOLIPOP_DB_NAME }}
@@ -25,19 +26,37 @@ jobs:
           ADMIN_PASSWORD_HASH: ${{ secrets.EGING_ADMIN_PASSWORD_HASH }}
         run: |
           set -euo pipefail
-          for v in FTP_HOST FTP_USER FTP_PASSWORD DEPLOY_DIR SITE_URL DB_HOST DB_NAME DB_USER DB_PASSWORD ADMIN_PASSWORD_HASH; do
+          for v in FTP_HOST FTP_USER FTP_PASSWORD DEPLOY_DIR PRIVATE_DIR SITE_URL; do
             test -n "${!v}"
           done
           test "$SITE_URL" = "https://eging.rss7.net"
-          case "$DEPLOY_DIR" in
-            */public|*/public/) ;;
-            *) echo "Refusing deploy: LOLIPOP_DEPLOY_DIR must be the verified eging public directory."; exit 1 ;;
-          esac
+          test "$DEPLOY_DIR" = "/eging"
+          test "$PRIVATE_DIR" = "/eging-private"
+
+          runtime_values=("$DB_HOST" "$DB_NAME" "$DB_USER" "$DB_PASSWORD" "$ADMIN_PASSWORD_HASH")
+          configured=0
+          for value in "${runtime_values[@]}"; do
+            [[ -n "$value" ]] && configured=$((configured+1))
+          done
+
+          if [[ "$configured" -eq 0 ]]; then
+            echo "RUNTIME_CONFIG=0" >> "$GITHUB_ENV"
+            echo "DB/admin secrets are not configured; deploying public site with dynamic services unavailable."
+          elif [[ "$configured" -eq 5 ]]; then
+            case "$ADMIN_PASSWORD_HASH" in
+              '$2y$'*|'$2b$'*|'$argon2id$'*) ;;
+              *) echo "EGING_ADMIN_PASSWORD_HASH is not a password_hash() value"; exit 1 ;;
+            esac
+            echo "RUNTIME_CONFIG=1" >> "$GITHUB_ENV"
+          else
+            echo "DB/admin secrets are partially configured; refusing deployment."
+            exit 1
+          fi
 
       - name: PHP syntax check
         run: find . -name '*.php' -not -path './.git/*' -print0 | xargs -0 -n1 php -l
 
-      - name: Build runtime config
+      - name: Build runtime files
         shell: bash
         env:
           DB_HOST: ${{ secrets.LOLIPOP_DB_HOST }}
@@ -48,23 +67,35 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p .runtime
-          php -r '
-          $cfg = [
-            "app_url" => "https://eging.rss7.net",
-            "db" => [
-              "host" => getenv("DB_HOST"),
-              "port" => 3306,
-              "name" => getenv("DB_NAME"),
-              "user" => getenv("DB_USER"),
-              "pass" => getenv("DB_PASSWORD"),
-            ],
-            "admin_password_hash" => getenv("ADMIN_PASSWORD_HASH"),
-          ];
-          file_put_contents(".runtime/config.php", "<?php\nreturn " . var_export($cfg, true) . ";\n");
-          '
-          php -l .runtime/config.php
+          cat > .runtime/private.htaccess <<'HTACCESS'
+          <IfModule mod_authz_core.c>
+          Require all denied
+          </IfModule>
+          <IfModule !mod_authz_core.c>
+          Order allow,deny
+          Deny from all
+          </IfModule>
+          HTACCESS
 
-      - name: Build 720p silent opening movie
+          if [[ "${RUNTIME_CONFIG:-0}" == "1" ]]; then
+            php -r '
+            $cfg = [
+              "app_url" => "https://eging.rss7.net",
+              "db" => [
+                "host" => getenv("DB_HOST"),
+                "port" => 3306,
+                "name" => getenv("DB_NAME"),
+                "user" => getenv("DB_USER"),
+                "pass" => getenv("DB_PASSWORD"),
+              ],
+              "admin_password_hash" => getenv("ADMIN_PASSWORD_HASH"),
+            ];
+            file_put_contents(".runtime/config.php", "<?php\nreturn " . var_export($cfg, true) . ";\n");
+            '
+            php -l .runtime/config.php
+          fi
+
+      - name: Build launch assets
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq ffmpeg lftp librsvg2-bin
@@ -76,10 +107,7 @@ jobs:
             -an -c:v libx264 -preset veryslow -crf 28 -pix_fmt yuv420p -movflags +faststart \
             public/assets/video/opening.mp4
 
-      - name: Install lftp
-        run: echo "lftp already installed"
-
-      - name: Deploy site without destructive sync
+      - name: Deploy without destructive sync
         shell: bash
         env:
           FTP_HOST: ${{ secrets.LOLIPOP_FTP_HOST }}
@@ -87,23 +115,37 @@ jobs:
           FTP_PASSWORD: ${{ secrets.LOLIPOP_FTP_PASSWORD }}
           FTP_PORT: ${{ vars.LOLIPOP_FTP_PORT }}
           DEPLOY_DIR: ${{ vars.LOLIPOP_DEPLOY_DIR }}
+          PRIVATE_DIR: ${{ vars.LOLIPOP_PRIVATE_DIR }}
         run: |
           set -euo pipefail
           PORT="${FTP_PORT:-21}"
           lftp -u "$FTP_USER","$FTP_PASSWORD" -p "$PORT" "$FTP_HOST" <<EOF
+          set cmd:fail-exit yes
+          set net:max-retries 2
+          set net:timeout 20
           set ftp:ssl-force true
           set ftp:ssl-protect-data true
           set ssl:verify-certificate yes
           mkdir -p "$DEPLOY_DIR"
-          cd "$DEPLOY_DIR"
-          mirror -R --verbose --only-newer --parallel=2 public/ .
-          cd ..
-          mkdir -p app config database
-          mirror -R --verbose --only-newer app/ app/
-          mirror -R --verbose --only-newer database/ database/
-          put .runtime/config.php -o config/config.php
-          bye
+          mirror -R --verbose --only-newer --parallel=2 public/ "$DEPLOY_DIR/"
+          mkdir -p "$PRIVATE_DIR" "$PRIVATE_DIR/app" "$PRIVATE_DIR/config" "$PRIVATE_DIR/database"
+          put .runtime/private.htaccess -o "$PRIVATE_DIR/.htaccess"
+          mirror -R --verbose --only-newer app/ "$PRIVATE_DIR/app/"
+          mirror -R --verbose --only-newer database/ "$PRIVATE_DIR/database/"
           EOF
+
+          if [[ "${RUNTIME_CONFIG:-0}" == "1" ]]; then
+            lftp -u "$FTP_USER","$FTP_PASSWORD" -p "$PORT" "$FTP_HOST" <<EOF
+            set cmd:fail-exit yes
+            set net:max-retries 2
+            set net:timeout 20
+            set ftp:ssl-force true
+            set ftp:ssl-protect-data true
+            set ssl:verify-certificate yes
+            put .runtime/config.php -o "$PRIVATE_DIR/config/config.php"
+            bye
+            EOF
+          fi
 
       - name: Verify public site
         shell: bash
