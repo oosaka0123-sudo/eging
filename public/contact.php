@@ -1,12 +1,13 @@
 <?php
-$configFile=dirname(__DIR__).'/config/config.php';
+require __DIR__.'/_runtime.php';
+try{$configFile=eging_config_file();}catch(Throwable $e){$configFile='';}
 $sent=false;$error='';
 if($_SERVER['REQUEST_METHOD']==='POST'){
   if(!is_file($configFile)){http_response_code(503);$error='現在、お問い合わせを受け付けられません。';}
   elseif(!empty($_POST['website']??'')){$sent=true;}
   else{
     try{
-      require dirname(__DIR__).'/app/bootstrap.php';
+      eging_require_bootstrap();
     }catch(Throwable $e){
       error_log('EGING contact bootstrap error: '.$e->getMessage());
       http_response_code(503);

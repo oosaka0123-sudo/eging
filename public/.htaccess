@@ -18,3 +18,8 @@ Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
 <FilesMatch "^\.">
 Require all denied
 </FilesMatch>
+
+
+<Files "_runtime.php">
+Require all denied
+</Files>

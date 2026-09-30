@@ -1,5 +1,6 @@
 <?php
-$configFile=dirname(__DIR__).'/config/config.php';
+require __DIR__.'/_runtime.php';
+try{$configFile=eging_config_file();}catch(Throwable $e){$configFile='';}
 if(!is_file($configFile)){
  http_response_code(503);
  $pageTitle='記事サービスを利用できません｜エギングギアラボ';
@@ -10,7 +11,7 @@ if(!is_file($configFile)){
  exit;
 }
 try{
- require dirname(__DIR__) . '/app/bootstrap.php';
+ eging_require_bootstrap();
 }catch(Throwable $e){
  error_log('EGING article bootstrap error: '.$e->getMessage());
  http_response_code(503);

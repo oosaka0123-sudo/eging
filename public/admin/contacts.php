@@ -1,5 +1,6 @@
 <?php
-require dirname(__DIR__,2).'/app/bootstrap.php';require_admin();
+require dirname(__DIR__) . '/_runtime.php';
+eging_require_bootstrap();require_admin();
 if($_SERVER['REQUEST_METHOD']==='POST'){verify_csrf((string)($_POST['csrf']??''));$id=(int)($_POST['id']??0);$status=in_array($_POST['status']??'read',['new','read','archived'],true)?$_POST['status']:'read';$pdo->prepare("UPDATE contact_messages SET status=? WHERE id=?")->execute([$status,$id]);header('Location:/admin/contacts.php');exit;}
 $rows=$pdo->query("SELECT id,name,email,message,status,created_at FROM contact_messages ORDER BY created_at DESC LIMIT 200")->fetchAll();
 ?><!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>お問い合わせ管理</title><style>body{font-family:system-ui;background:#f4f5f6;margin:0}main{max-width:1100px;margin:auto;padding:20px}.msg{background:#fff;border:1px solid #ddd;border-radius:12px;padding:16px;margin:14px 0}.meta{color:#666;font-size:.85rem}.body{white-space:pre-wrap;line-height:1.7}button,select{font:inherit;padding:8px}</style></head><body><main><?php require __DIR__.'/_nav.php';?><h1>お問い合わせ</h1>

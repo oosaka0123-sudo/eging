@@ -1,5 +1,6 @@
 <?php
-require dirname(__DIR__, 2) . '/app/bootstrap.php'; require_admin();
+require dirname(__DIR__) . '/_runtime.php';
+eging_require_bootstrap(); require_admin();
 $types=['egi','rod','reel','pe','leader','snap','landing','bag','light','lifejacket','other'];
 if($_SERVER['REQUEST_METHOD']==='POST'){verify_csrf((string)($_POST['csrf']??''));$id=(int)($_POST['id']??0);$type=in_array($_POST['type']??'other',$types,true)?$_POST['type']:'other';
 $data=[':slug'=>trim($_POST['slug']),':type'=>$type,':brand'=>trim($_POST['brand']),':name'=>trim($_POST['name']),':summary'=>trim($_POST['summary']??''),':price'=>($_POST['price_yen']??'')!==''?(int)$_POST['price_yen']:null,':weight'=>($_POST['weight_g']??'')!==''?(float)$_POST['weight_g']:null,':sink'=>($_POST['sink_sec_per_m']??'')!==''?(float)$_POST['sink_sec_per_m']:null,':source'=>trim($_POST['source_url']??''),':checked'=>($_POST['source_checked_at']??'')?:null,':note'=>trim($_POST['evidence_note']??''),':status'=>in_array($_POST['status']??'draft',['draft','published'],true)?$_POST['status']:'draft'];

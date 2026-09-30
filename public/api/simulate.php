@@ -1,13 +1,14 @@
 <?php
 header('Content-Type: application/json; charset=utf-8');
-$configFile=dirname(__DIR__,2).'/config/config.php';
+require dirname(__DIR__) . '/_runtime.php';
+try{$configFile=eging_config_file();}catch(Throwable $e){$configFile='';}
 if(!is_file($configFile)){
     http_response_code(503);
     echo json_encode(['error'=>'service_unavailable'], JSON_UNESCAPED_UNICODE);
     exit;
 }
 try{
-    require dirname(__DIR__, 2) . '/app/bootstrap.php';
+    eging_require_bootstrap();
 }catch(Throwable $e){
     error_log('EGING simulate bootstrap error: '.$e->getMessage());
     http_response_code(503);
