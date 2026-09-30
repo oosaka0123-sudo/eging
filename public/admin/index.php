@@ -1,5 +1,6 @@
 <?php
-require dirname(__DIR__, 2) . '/app/bootstrap.php';
+require dirname(__DIR__) . '/_runtime.php';
+eging_require_bootstrap();
 require_admin();
 
 function cms_table_exists(PDO $pdo, string $table): bool {
