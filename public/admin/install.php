@@ -1,8 +1,9 @@
 <?php
-require dirname(__DIR__, 2) . '/app/bootstrap.php';
+require dirname(__DIR__) . '/_runtime.php';
+eging_require_bootstrap();
 require_admin();
 
-$schemaFile = dirname(__DIR__, 2) . '/database/schema.sql';
+$schemaFile = eging_schema_file();
 $message = '';
 $error = '';
 
