@@ -21,6 +21,7 @@ jobs:
           test -f public/robots.txt
           test -f public/sitemap.php
           test -f public/.htaccess
+          test -f public/_runtime.php
           test -f database/schema.sql
           test -f config/config.example.php
 
