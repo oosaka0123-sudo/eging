@@ -119,6 +119,37 @@ jobs:
         run: |
           set -euo pipefail
           PORT="${FTP_PORT:-21}"
+          ensure_remote_dir() {
+            local remote_path="$1"
+            if lftp -u "$FTP_USER","$FTP_PASSWORD" -p "$PORT" "$FTP_HOST" -e "
+              set cmd:fail-exit yes;
+              set net:max-retries 1;
+              set net:timeout 15;
+              set ftp:ssl-force true;
+              set ftp:ssl-protect-data true;
+              set ssl:verify-certificate yes;
+              cls -1 \"$remote_path\";
+              bye;
+            " >/dev/null 2>&1; then
+              return 0
+            fi
+            lftp -u "$FTP_USER","$FTP_PASSWORD" -p "$PORT" "$FTP_HOST" -e "
+              set cmd:fail-exit yes;
+              set net:max-retries 1;
+              set net:timeout 15;
+              set ftp:ssl-force true;
+              set ftp:ssl-protect-data true;
+              set ssl:verify-certificate yes;
+              mkdir \"$remote_path\";
+              bye;
+            "
+          }
+
+          ensure_remote_dir "$PRIVATE_DIR"
+          ensure_remote_dir "$PRIVATE_DIR/app"
+          ensure_remote_dir "$PRIVATE_DIR/config"
+          ensure_remote_dir "$PRIVATE_DIR/database"
+
           lftp -u "$FTP_USER","$FTP_PASSWORD" -p "$PORT" "$FTP_HOST" <<EOF
           set cmd:fail-exit yes
           set net:max-retries 2
@@ -126,9 +157,7 @@ jobs:
           set ftp:ssl-force true
           set ftp:ssl-protect-data true
           set ssl:verify-certificate yes
-          mkdir -p "$DEPLOY_DIR"
           mirror -R --verbose --only-newer --parallel=2 public/ "$DEPLOY_DIR/"
-          mkdir -p "$PRIVATE_DIR" "$PRIVATE_DIR/app" "$PRIVATE_DIR/config" "$PRIVATE_DIR/database"
           put .runtime/private.htaccess -o "$PRIVATE_DIR/.htaccess"
           mirror -R --verbose --only-newer app/ "$PRIVATE_DIR/app/"
           mirror -R --verbose --only-newer database/ "$PRIVATE_DIR/database/"
