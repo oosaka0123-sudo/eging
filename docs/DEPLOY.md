@@ -3,28 +3,40 @@
 ## Production URL
 - https://eging.rss7.net
 
-## Server layout
-The verified subdomain DocumentRoot must point to the repository's `public/` directory.
-
-Expected layout:
+## Verified server layout
+2026-09-30の実FTP probeで、`eging.rss7.net` のDocumentRootは **`/eging`** と確認済み。
+`/eging/public` は存在せず、旧`/public`前提は使用しない。
 
 ```
-<project-root>/
-  app/
-  config/
-    config.php        # generated during deploy, never committed
-  database/
-    schema.sql        # deployed outside web root for admin installer
-  public/             # eging.rss7.net DocumentRoot
+/
+├─ eging/                 # eging.rss7.net DocumentRoot
+│  ├─ index.php
+│  ├─ admin/
+│  ├─ api/
+│  ├─ assets/
+│  └─ ...
+└─ eging-private/         # PHP include用。Webアクセスは.htaccessで拒否
+   ├─ .htaccess
+   ├─ app/
+   │  └─ bootstrap.php
+   ├─ config/
+   │  └─ config.php       # DB設定済み時だけ生成。commitしない
+   └─ database/
+      └─ schema.sql
 ```
+
+ローカル開発では `public/_runtime.php` が従来のrepository root（`app/`, `config/`, `database/`）を自動利用する。
 
 ## GitHub Environment
 Environment: `production`
 
-### Secrets
+### Required FTP Secrets
 - `LOLIPOP_FTP_HOST`
 - `LOLIPOP_FTP_USER`
 - `LOLIPOP_FTP_PASSWORD`
+
+### Optional until DB runtime is enabled
+以下5つは **全て未設定** または **全て設定済み** のどちらかにする。途中まで設定されている場合はDeployを拒否する。
 - `LOLIPOP_DB_HOST`
 - `LOLIPOP_DB_NAME`
 - `LOLIPOP_DB_USER`
@@ -34,23 +46,27 @@ Environment: `production`
 ### Variables
 - `LOLIPOP_SITE_URL=https://eging.rss7.net`
 - `LOLIPOP_FTP_PORT=21`
-- `LOLIPOP_DEPLOY_DIR` = verified path ending in `/public`
+- `LOLIPOP_DEPLOY_DIR=/eging`
+- `LOLIPOP_PRIVATE_DIR=/eging-private`
 
-Production `config/config.php` is generated only inside the GitHub Actions runner from Environment secrets, uploaded to the server, and never committed.
+## Deployment behavior
+- `public/` の内容を `/eging/` へ非破壊upload。
+- `app/` と `database/` を `/eging-private/` へ配置。
+- `/eging-private/.htaccess` は外部Webアクセスを拒否。
+- DB/Admin secretsが未設定なら静的公開のみ行い、記事・問い合わせPOST・診断API等のDB依存機能は503で安全に停止。
+- 5つのDB/Admin secretsが全て設定済みなら `config/config.php` をActions runner内で生成し、`/eging-private/config/config.php` へuploadする。
+- remote delete syncは行わない。
 
 ## First deploy
-1. Confirm the Lolipop subdomain DocumentRoot exactly.
-2. Confirm that DocumentRoot is the intended `.../public` directory.
-3. Create the MySQL database in Lolipop.
-4. Configure the production GitHub Environment.
-5. Generate the admin password hash with PHP `password_hash(..., PASSWORD_DEFAULT)` and save only the hash as `EGING_ADMIN_PASSWORD_HASH`.
-6. Run the deploy workflow manually.
-7. Log in to `/admin/` and open `/admin/install.php` to create the tables.
-8. Verify:
-   - `/`
-   - `/health.php`
-   - `/robots.txt`
-   - `/sitemap.php`
-   - `/admin/login.php`
+1. `Production Preflight` を実行。
+2. FTP/DocumentRoot確認が成功していることを確認。
+3. `Deploy to Lolipop` を手動実行。
+4. `/`, `/health.php`, `/robots.txt`, `/sitemap.xml` を確認。
+5. DB runtimeを有効化した後、`/admin/` にログインし `/admin/install.php` でテーブルを初期化・更新。
+6. 診断API、問い合わせフォーム、CMS記事を実確認する。
 
-The workflow intentionally uses non-destructive upload and refuses deployment unless the directory ends in `/public`.
+## Safety
+- production secretsはcommitしない。
+- `/eging-private` をDocumentRootにしない。
+- FTP uploadは非破壊。
+- public/private pathが検証済み値と一致しない場合はDeployを拒否する。
