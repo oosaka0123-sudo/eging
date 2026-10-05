@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 ini_set('display_errors', '0');
 error_reporting(E_ALL);
+date_default_timezone_set('Asia/Tokyo');
 
 $projectRoot = dirname(__DIR__);
 require_once __DIR__ . '/security.php';
@@ -27,6 +28,7 @@ try {
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
         PDO::ATTR_EMULATE_PREPARES => false,
     ]);
+    $pdo->exec("SET time_zone = '+09:00'");
 } catch (PDOException $e) {
     error_log('EGING database connection failed.');
     throw new RuntimeException('Database unavailable.', 0, $e);
@@ -70,7 +72,7 @@ function csrf_token(): string {
 function verify_csrf(string $token): void {
     $stored = (string)($_SESSION['csrf'] ?? '');
     if ($stored === '' || $token === '' || !hash_equals($stored, $token)) {
-        http_response_code(419);
+        http_response_code(403);
         exit('Invalid CSRF token.');
     }
 }
