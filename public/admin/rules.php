@@ -16,6 +16,14 @@ $choices = [
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     verify_csrf((string)($_POST['csrf'] ?? ''));
+    if (($_POST['action'] ?? '') === 'delete') {
+        $deleteId = (int)($_POST['delete_id'] ?? 0);
+        if ($deleteId > 0) {
+            $pdo->prepare("DELETE FROM simulator_rules WHERE id=?")->execute([$deleteId]);
+        }
+        header('Location:/admin/rules.php');
+        exit;
+    }
     $id = (int)($_POST['id'] ?? 0);
     $output = json_encode([
         'rod' => trim((string)($_POST['rod'] ?? '')),
@@ -59,13 +67,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             VALUES(:priority,:season,:field,:depth,:wind,:current,:tide,:size,:time,:output,:rationale,:source,:enabled)")
             ->execute($data);
     }
-    header('Location:/admin/rules.php');
-    exit;
-}
-
-if (isset($_GET['delete'])) {
-    verify_csrf((string)($_GET['token'] ?? ''));
-    $pdo->prepare("DELETE FROM simulator_rules WHERE id=?")->execute([(int)$_GET['delete']]);
     header('Location:/admin/rules.php');
     exit;
 }
@@ -138,6 +139,6 @@ table{width:100%;border-collapse:collapse;min-width:980px}th,td{padding:9px;bord
 <td><?=htmlspecialchars($choices['time_of_day'][$r['time_of_day']]??'*',ENT_QUOTES,'UTF-8')?></td>
 <td><?=htmlspecialchars($choices['current_band'][$r['current_band']]??'*',ENT_QUOTES,'UTF-8')?></td>
 <td><?=$r['enabled']?'ON':'OFF'?></td>
-<td><a href="?edit=<?=$r['id']?>">編集</a> / <a href="?delete=<?=$r['id']?>&token=<?=urlencode(csrf_token())?>" onclick="return confirm('削除しますか？')">削除</a></td>
+<td><a href="?edit=<?=$r['id']?>">編集</a> / <form method="post" style="display:inline" onsubmit="return confirm('削除しますか？')"><input type="hidden" name="csrf" value="<?=htmlspecialchars(csrf_token(),ENT_QUOTES,'UTF-8')?>"><input type="hidden" name="action" value="delete"><input type="hidden" name="delete_id" value="<?=(int)$r['id']?>"><button type="submit">削除</button></form></td>
 </tr><?php endforeach;?>
 </table></div></main></body></html>
