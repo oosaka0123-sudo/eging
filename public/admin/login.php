@@ -9,7 +9,8 @@ if (!empty($_SESSION['admin_authenticated'])) {
 
 $error = '';
 $now = time();
-$lockUntil = (int)($_SESSION['login_lock_until'] ?? 0);
+$rate = eging_login_rate_status($loginRateDir);
+$lockUntil = (int)$rate['lock_until'];
 
 if ($lockUntil > $now) {
     http_response_code(429);
@@ -21,17 +22,13 @@ if ($lockUntil > $now) {
     if (password_verify($password, $config['admin_password_hash'])) {
         session_regenerate_id(true);
         $_SESSION['admin_authenticated'] = true;
-        unset($_SESSION['login_failures'], $_SESSION['login_lock_until']);
+        eging_login_rate_clear($loginRateDir);
         header('Location: /admin/');
         exit;
     }
 
-    $failures = (int)($_SESSION['login_failures'] ?? 0) + 1;
-    $_SESSION['login_failures'] = $failures;
-
-    if ($failures >= 5) {
-        $_SESSION['login_lock_until'] = $now + 600;
-        $_SESSION['login_failures'] = 0;
+    $lockUntil = eging_login_rate_fail($loginRateDir);
+    if ($lockUntil > $now) {
         http_response_code(429);
         $error = 'ログイン試行回数が多すぎます。10分後に再度お試しください。';
     } else {
