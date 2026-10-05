@@ -34,7 +34,9 @@ try {
     throw new RuntimeException('Database unavailable.', 0, $e);
 }
 
-if (session_status() !== PHP_SESSION_ACTIVE) {
+$isAdminRequest = str_starts_with((string)($_SERVER['REQUEST_URI'] ?? ''), '/admin/');
+
+if ($isAdminRequest && session_status() !== PHP_SESSION_ACTIVE) {
     ini_set('session.use_strict_mode', '1');
     ini_set('session.use_only_cookies', '1');
     if (is_dir($sessionDir) && is_writable($sessionDir)) {
@@ -50,7 +52,7 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
 
-if (str_starts_with((string)($_SERVER['REQUEST_URI'] ?? ''), '/admin/')) {
+if ($isAdminRequest) {
     header('Cache-Control: no-store, private');
     header('Pragma: no-cache');
 }
