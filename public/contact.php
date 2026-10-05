@@ -1,9 +1,12 @@
 <?php
 require __DIR__.'/_runtime.php';
+require __DIR__.'/_contact_csrf.php';
 try{$configFile=eging_config_file();}catch(Throwable $e){$configFile='';}
 $sent=false;$error='';
+$contactCsrf=eging_contact_csrf_token();
 if($_SERVER['REQUEST_METHOD']==='POST'){
-  if(!is_file($configFile)){http_response_code(503);$error='現在、お問い合わせを受け付けられません。';}
+  if(!eging_verify_contact_csrf($contactCsrf,(string)($_POST['csrf']??''))){http_response_code(403);$error='送信セッションを確認できません。ページを再読み込みしてください。';}
+  elseif(!is_file($configFile)){http_response_code(503);$error='現在、お問い合わせを受け付けられません。';}
   elseif(!empty($_POST['website']??'')){$sent=true;}
   else{
     try{
@@ -36,6 +39,7 @@ $pageTitle='CONTACT｜エギングギアラボ';$pageDescription='エギング�
 <main id="main"><section class="page-hero"><img class="page-art" src="/assets/visuals/hero-depth.svg" alt=""><div><span class="kicker">CONTACT / 07</span><h1>話そう。</h1><p>掲載内容の修正、メーカー・ショップからの情報提供、サイトへのご意見はこちらから。</p></div></section><section class="section">
 <?php if($sent):?><p class="result-panel"><strong>送信しました。</strong><br>内容を確認後、必要に応じて返信します。</p>
 <?php else:?><form class="contact-form" method="post" action="/contact.php">
+<input type="hidden" name="csrf" value="<?=htmlspecialchars($contactCsrf,ENT_QUOTES,'UTF-8')?>">
 <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">
 <label>お名前<input required maxlength="120" type="text" name="name" autocomplete="name" value="<?=htmlspecialchars($_POST['name']??'',ENT_QUOTES,'UTF-8')?>"></label>
 <label>メール<input required maxlength="255" type="email" name="email" autocomplete="email" value="<?=htmlspecialchars($_POST['email']??'',ENT_QUOTES,'UTF-8')?>"></label>
