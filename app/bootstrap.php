@@ -1,7 +1,14 @@
 <?php
 declare(strict_types=1);
 
-$configFile = dirname(__DIR__) . '/config/config.php';
+ini_set('display_errors', '0');
+error_reporting(E_ALL);
+
+$projectRoot = dirname(__DIR__);
+require_once __DIR__ . '/security.php';
+[$sessionDir, $loginRateDir] = eging_prepare_private_runtime($projectRoot);
+
+$configFile = $projectRoot . '/config/config.php';
 if (!is_file($configFile)) {
     http_response_code(500);
     exit('Application is not configured.');
@@ -14,20 +21,28 @@ $dsn = sprintf(
     $config['db']['port'] ?? 3306,
     $config['db']['name']
 );
-$pdo = new PDO($dsn, $config['db']['user'], $config['db']['pass'], [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    PDO::ATTR_EMULATE_PREPARES => false,
-]);
+try {
+    $pdo = new PDO($dsn, $config['db']['user'], $config['db']['pass'], [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES => false,
+    ]);
+} catch (PDOException $e) {
+    error_log('EGING database connection failed.');
+    throw new RuntimeException('Database unavailable.', 0, $e);
+}
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
     ini_set('session.use_strict_mode', '1');
     ini_set('session.use_only_cookies', '1');
+    if (is_dir($sessionDir) && is_writable($sessionDir)) {
+        session_save_path($sessionDir);
+    }
     session_name('eging_admin');
     session_set_cookie_params([
         'httponly' => true,
-        'secure' => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
-        'samesite' => 'Lax',
+        'secure' => eging_is_https(),
+        'samesite' => 'Strict',
         'path' => '/',
     ]);
     session_start();
@@ -53,7 +68,8 @@ function csrf_token(): string {
 }
 
 function verify_csrf(string $token): void {
-    if (!hash_equals($_SESSION['csrf'] ?? '', $token)) {
+    $stored = (string)($_SESSION['csrf'] ?? '');
+    if ($stored === '' || $token === '' || !hash_equals($stored, $token)) {
         http_response_code(419);
         exit('Invalid CSRF token.');
     }
