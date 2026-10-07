@@ -43,6 +43,7 @@ $articleSchema=[
  'datePublished'=>$article['published_at'] ? date(DATE_ATOM,strtotime($article['published_at'])) : null,
  'dateModified'=>date(DATE_ATOM,strtotime($article['updated_at'])),
  'author'=>['@type'=>'Organization','name'=>'エギングギアラボ'],
- 'publisher'=>['@type'=>'Organization','name'=>'エギングギアラボ','url'=>'https://eging.rss7.net/']
+ 'publisher'=>['@type'=>'Organization','name'=>'エギングギアラボ','url'=>'https://eging.rss7.net/'],
+ 'image'=>'https://eging.rss7.net/assets/brand/og-default.png'
 ];
 ?><script type="application/ld+json"><?=json_encode(array_filter($articleSchema,fn($v)=>$v!==null),JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES)?></script><main id="main"><article><section class="page-hero"><?php if($heroImage!==''):?><img class="page-art" src="<?=htmlspecialchars($heroImage,ENT_QUOTES,'UTF-8')?>" alt=""><?php endif;?><div><span class="kicker"><?=htmlspecialchars(strtoupper($article['category']),ENT_QUOTES,'UTF-8')?></span><h1><?=htmlspecialchars($article['title'],ENT_QUOTES,'UTF-8')?></h1><p><?=htmlspecialchars($article['description']??'',ENT_QUOTES,'UTF-8')?></p></div></section><section class="section"><div class="article-shell"><div class="prose"><?=nl2br(htmlspecialchars($article['body'],ENT_QUOTES,'UTF-8'))?></div><aside class="side-note">UPDATED<br><?=htmlspecialchars($article['updated_at'],ENT_QUOTES,'UTF-8')?><br><br>広告リンクを含む場合は記事内で明示します。</aside></div></section></article></main><?php require __DIR__.'/partials/footer.php';?>
