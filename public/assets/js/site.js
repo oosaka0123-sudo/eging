@@ -2,6 +2,7 @@
 if(btn&&menu){btn.addEventListener('click',()=>{const o=menu.classList.toggle('open');body.classList.toggle('menu-open',o);btn.setAttribute('aria-expanded',String(o));btn.setAttribute('aria-label',o?'メニューを閉じる':'メニューを開く')});qa('a',menu).forEach(a=>a.addEventListener('click',()=>{menu.classList.remove('open');body.classList.remove('menu-open');btn.setAttribute('aria-expanded','false')}))}
 addEventListener('pageshow',()=>{body.classList.remove('page-leaving','menu-open');menu?.classList.remove('open');if(btn){btn.setAttribute('aria-expanded','false');btn.setAttribute('aria-label','メニューを開く')}});
 const opening=q('#opening');if(opening){const seen=sessionStorage.getItem('egl-opening');const exit=()=>{opening.classList.add('exit');opening.setAttribute('aria-hidden','true');const skip=q('[data-skip]',opening);if(skip)skip.tabIndex=-1;sessionStorage.setItem('egl-opening','1');setTimeout(()=>opening.remove(),700)};q('[data-skip]',opening)?.addEventListener('click',exit);if(seen)opening.remove();else setTimeout(exit,900)}
+addEventListener('pageshow',()=>{body.classList.remove('page-leaving');body.classList.remove('menu-open');menu?.classList.remove('open');btn?.setAttribute('aria-expanded','false')});
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.14});qa('.reveal').forEach(el=>io.observe(el));
 
 if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
