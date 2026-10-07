@@ -5,9 +5,14 @@ function eging_private_root(): string
 {
     $documentRoot = rtrim((string)($_SERVER['DOCUMENT_ROOT'] ?? ''), "/\\");
     if ($documentRoot !== '') {
-        $productionRoot = dirname($documentRoot) . DIRECTORY_SEPARATOR . 'eging-private';
-        if (is_file($productionRoot . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'bootstrap.php')) {
-            return $productionRoot;
+        $candidates = [
+            dirname($documentRoot) . DIRECTORY_SEPARATOR . 'eging-private',
+            $documentRoot . DIRECTORY_SEPARATOR . '_private',
+        ];
+        foreach ($candidates as $productionRoot) {
+            if (is_file($productionRoot . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'bootstrap.php')) {
+                return $productionRoot;
+            }
         }
     }
 

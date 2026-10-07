@@ -9,20 +9,23 @@
 
 ```
 /
-├─ eging/                 # eging.rss7.net DocumentRoot
-│  ├─ index.php
-│  ├─ admin/
-│  ├─ api/
-│  ├─ assets/
-│  └─ ...
-└─ eging-private/         # PHP include用。Webアクセスは.htaccessで拒否
-   ├─ .htaccess
-   ├─ app/
-   │  └─ bootstrap.php
-   ├─ config/
-   │  └─ config.php       # DB設定済み時だけ生成。commitしない
-   └─ database/
-      └─ schema.sql
+└─ eging/                 # eging.rss7.net DocumentRoot
+   ├─ index.php
+   ├─ admin/
+   ├─ api/
+   ├─ assets/
+   ├─ _private/           # PHP include用。Webアクセスは二重に拒否
+   │  ├─ .htaccess
+   │  ├─ app/
+   │  │  └─ bootstrap.php
+   │  ├─ config/
+   │  │  └─ config.php   # DB設定済み時だけ生成。commitしない
+   │  ├─ database/
+   │  │  └─ schema.sql
+   │  └─ var/
+   │     ├─ sessions/
+   │     └─ login-rate/
+   └─ ...
 ```
 
 ローカル開発では `public/_runtime.php` が従来のrepository root（`app/`, `config/`, `database/`）を自動利用する。
@@ -47,14 +50,14 @@ Environment: `production`
 - `LOLIPOP_SITE_URL=https://eging.rss7.net`
 - `LOLIPOP_FTP_PORT=21`
 - `LOLIPOP_DEPLOY_DIR=/eging`
-- `LOLIPOP_PRIVATE_DIR=/eging-private`
+- `LOLIPOP_PRIVATE_DIR=/eging/_private`
 
 ## Deployment behavior
 - `public/` の内容を `/eging/` へ非破壊upload。
-- `app/` と `database/` を `/eging-private/` へ配置。
-- `/eging-private/.htaccess` は外部Webアクセスを拒否。
+- `app/` と `database/` を `/eging/_private/` へ配置。
+- `/eging/_private/.htaccess` は外部Webアクセスを拒否。
 - DB/Admin secretsが未設定なら静的公開のみ行い、記事・問い合わせPOST・診断API等のDB依存機能は503で安全に停止。
-- 5つのDB/Admin secretsが全て設定済みなら `config/config.php` をActions runner内で生成し、`/eging-private/config/config.php` へuploadする。
+- 5つのDB/Admin secretsが全て設定済みなら `config/config.php` をActions runner内で生成し、`/eging/_private/config/config.php` へuploadする。
 - remote delete syncは行わない。
 
 ## First deploy
@@ -67,6 +70,6 @@ Environment: `production`
 
 ## Safety
 - production secretsはcommitしない。
-- `/eging-private` をDocumentRootにしない。
+- `/eging/_private` をDocumentRootにしない。
 - FTP uploadは非破壊。
 - public/private pathが検証済み値と一致しない場合はDeployを拒否する。
