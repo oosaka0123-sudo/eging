@@ -31,7 +31,7 @@ jobs:
           done
           test "$SITE_URL" = "https://eging.rss7.net"
           test "$DEPLOY_DIR" = "/eging"
-          test "$PRIVATE_DIR" = "/eging-private"
+          test "$PRIVATE_DIR" = "/eging/_private"
 
           runtime_values=("$DB_HOST" "$DB_NAME" "$DB_USER" "$DB_PASSWORD" "$ADMIN_PASSWORD_HASH")
           configured=0
@@ -149,6 +149,9 @@ jobs:
           ensure_remote_dir "$PRIVATE_DIR/app"
           ensure_remote_dir "$PRIVATE_DIR/config"
           ensure_remote_dir "$PRIVATE_DIR/database"
+          ensure_remote_dir "$PRIVATE_DIR/var"
+          ensure_remote_dir "$PRIVATE_DIR/var/sessions"
+          ensure_remote_dir "$PRIVATE_DIR/var/login-rate"
 
           lftp -u "$FTP_USER","$FTP_PASSWORD" -p "$PORT" "$FTP_HOST" <<EOF
           set cmd:fail-exit yes
