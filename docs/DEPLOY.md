@@ -17,17 +17,15 @@
    ├─ _private/           # PHP include用。Webアクセスは二重に拒否
    │  ├─ .htaccess
    │  ├─ app/
+   │  │  └─ bootstrap.php
    │  ├─ config/
+   │  │  └─ config.php   # DB設定済み時だけ生成。commitしない
    │  ├─ database/
+   │  │  └─ schema.sql
    │  └─ var/
+   │     ├─ sessions/
+   │     └─ login-rate/
    └─ ...
-   ├─ .htaccess
-   ├─ app/
-   │  └─ bootstrap.php
-   ├─ config/
-   │  └─ config.php       # DB設定済み時だけ生成。commitしない
-   └─ database/
-      └─ schema.sql
 ```
 
 ローカル開発では `public/_runtime.php` が従来のrepository root（`app/`, `config/`, `database/`）を自動利用する。
