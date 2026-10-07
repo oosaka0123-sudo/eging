@@ -149,6 +149,8 @@ jobs:
           ensure_remote_dir "$PRIVATE_DIR/app"
           ensure_remote_dir "$PRIVATE_DIR/config"
           ensure_remote_dir "$PRIVATE_DIR/database"
+          ensure_remote_dir "$PRIVATE_DIR/storage"
+          ensure_remote_dir "$PRIVATE_DIR/storage/sessions"
 
           lftp -u "$FTP_USER","$FTP_PASSWORD" -p "$PORT" "$FTP_HOST" <<EOF
           set cmd:fail-exit yes
