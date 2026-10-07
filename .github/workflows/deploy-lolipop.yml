@@ -31,7 +31,7 @@ jobs:
           done
           test "$SITE_URL" = "https://eging.rss7.net"
           test "$DEPLOY_DIR" = "/eging"
-          test "$PRIVATE_DIR" = "/eging/_private"
+          test "$PRIVATE_DIR" = "/eging-private"
 
           runtime_values=("$DB_HOST" "$DB_NAME" "$DB_USER" "$DB_PASSWORD" "$ADMIN_PASSWORD_HASH")
           configured=0
