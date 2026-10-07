@@ -7,7 +7,7 @@ $schemaFile = eging_schema_file();
 $message = '';
 $error = '';
 
-$requiredTables = ['articles','gear_items','simulator_rules','contact_messages'];
+$requiredTables = ['articles','gear_items','simulator_rules','contact_messages','admin_login_attempts'];
 
 function table_exists(PDO $pdo, string $table): bool {
     $stmt = $pdo->prepare('SHOW TABLES LIKE ?');
