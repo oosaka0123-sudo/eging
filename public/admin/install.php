@@ -71,10 +71,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-if (table_exists($pdo, 'simulator_rules')) {
-    ensure_simulator_columns($pdo);
-}
+$hasSimulator = table_exists($pdo, 'simulator_rules');
 $allReady = !in_array(false, $status, true)
+    && $hasSimulator
     && column_exists($pdo, 'simulator_rules', 'tide_phase')
     && column_exists($pdo, 'simulator_rules', 'time_of_day');
 ?>
