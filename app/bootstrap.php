@@ -2,14 +2,8 @@
 declare(strict_types=1);
 
 ini_set('display_errors', '0');
-error_reporting(E_ALL);
-date_default_timezone_set('Asia/Tokyo');
 
-$projectRoot = dirname(__DIR__);
-require_once __DIR__ . '/security.php';
-[$sessionDir, $loginRateDir] = eging_prepare_private_runtime($projectRoot);
-
-$configFile = $projectRoot . '/config/config.php';
+$configFile = dirname(__DIR__) . '/config/config.php';
 if (!is_file($configFile)) {
     http_response_code(500);
     exit('Application is not configured.');
@@ -22,37 +16,44 @@ $dsn = sprintf(
     $config['db']['port'] ?? 3306,
     $config['db']['name']
 );
+
 try {
     $pdo = new PDO($dsn, $config['db']['user'], $config['db']['pass'], [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
         PDO::ATTR_EMULATE_PREPARES => false,
     ]);
-    $pdo->exec("SET time_zone = '+09:00'");
 } catch (PDOException $e) {
-    error_log('EGING database connection failed.');
-    throw new RuntimeException('Database unavailable.', 0, $e);
+    error_log('EGING database connection failed: '.$e->getCode());
+    throw new RuntimeException('Database service unavailable.');
 }
 
-$isAdminRequest = str_starts_with((string)($_SERVER['REQUEST_URI'] ?? ''), '/admin/');
-
-if ($isAdminRequest && session_status() !== PHP_SESSION_ACTIVE) {
+if (session_status() !== PHP_SESSION_ACTIVE) {
     ini_set('session.use_strict_mode', '1');
     ini_set('session.use_only_cookies', '1');
+
+    $sessionDir = dirname(__DIR__) . '/storage/sessions';
+    if (!is_dir($sessionDir)) {
+        @mkdir($sessionDir, 0700, true);
+    }
     if (is_dir($sessionDir) && is_writable($sessionDir)) {
         session_save_path($sessionDir);
     }
+
+    $forwardedProto = strtolower((string)($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? ''));
+    $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $forwardedProto === 'https';
+
     session_name('eging_admin');
     session_set_cookie_params([
         'httponly' => true,
-        'secure' => eging_is_https(),
+        'secure' => $isHttps,
         'samesite' => 'Strict',
         'path' => '/',
     ]);
     session_start();
 }
 
-if ($isAdminRequest) {
+if (str_starts_with((string)($_SERVER['REQUEST_URI'] ?? ''), '/admin/')) {
     header('Cache-Control: no-store, private');
     header('Pragma: no-cache');
 }
@@ -72,9 +73,9 @@ function csrf_token(): string {
 }
 
 function verify_csrf(string $token): void {
-    $stored = (string)($_SESSION['csrf'] ?? '');
-    if ($stored === '' || $token === '' || !hash_equals($stored, $token)) {
-        http_response_code(403);
+    $expected = $_SESSION['csrf'] ?? null;
+    if (!is_string($expected) || $expected === '' || $token === '' || !hash_equals($expected, $token)) {
+        http_response_code(419);
         exit('Invalid CSRF token.');
     }
 }
