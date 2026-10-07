@@ -8,6 +8,13 @@ if (!empty($_SESSION['admin_authenticated'])) {
 }
 
 $error = '';
+$pdo->exec("CREATE TABLE IF NOT EXISTS admin_login_attempts (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    ip_hash CHAR(64) NOT NULL,
+    attempted_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    INDEX(ip_hash, attempted_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
 $ip = (string)($_SERVER['REMOTE_ADDR'] ?? '');
 $ipHash = hash_hmac('sha256', $ip, (string)$config['admin_password_hash']);
 
