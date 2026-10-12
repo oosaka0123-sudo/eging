@@ -1,5 +1,14 @@
 # Lolipop Deploy
 
+## 2026-10-12 deployment status / canonical path
+
+**Actual current deployment entry point:** `oosaka0123-sudo/rss7-ai-works` repository's `.github/workflows/deploy-eging.yml` (workflow "Deploy Eging", environment `production`). It checks out `oosaka0123-sudo/eging` main, and uses stored FTPS credentials to upload non-destructively to `/eging` (public) and `/eging-private` (private runtime). A successful run is recorded at https://github.com/oosaka0123-sudo/rss7-ai-works/actions/runs/38218343709.
+
+**Important:** `eging` repository's own "Production Preflight" currently fails for lack of FTP secrets scoped to that repository. Until it is explicitly reconfigured, use the proven broker workflow above. Do not copy secrets into commits or extract them from another repository's logs.
+
+**DB runtime remains blocked:** the existing "Configure Eging Runtime" workflow uploaded config but returned MySQL authentication error SQLSTATE HY000 / driver code 1045 on 2026-10-12. Confirm credentials via the authorized hosting control panel. Do **not** repeatedly retry or reset the shared MySQL user's password without confirming other sites' impact. The photo gallery and detail pages have been deployed, but until the DB connection works and photo rights/affiliate links are verified, they cannot display the full product-photo collection.
+
+
 ## Production URL
 - https://eging.rss7.net
 
