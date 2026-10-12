@@ -6,7 +6,10 @@ if($_SERVER['REQUEST_METHOD']==='POST'){verify_csrf((string)($_POST['csrf']??'')
 $data=[':slug'=>trim($_POST['slug']),':type'=>$type,':brand'=>trim($_POST['brand']),':name'=>trim($_POST['name']),':summary'=>trim($_POST['summary']??''),':price'=>($_POST['price_yen']??'')!==''?(int)$_POST['price_yen']:null,':weight'=>($_POST['weight_g']??'')!==''?(float)$_POST['weight_g']:null,':sink'=>($_POST['sink_sec_per_m']??'')!==''?(float)$_POST['sink_sec_per_m']:null,':source'=>trim($_POST['source_url']??''),':checked'=>($_POST['source_checked_at']??'')?:null,':note'=>trim($_POST['evidence_note']??''),':status'=>in_array($_POST['status']??'draft',['draft','published'],true)?$_POST['status']:'draft'];
 $photo=trim((string)($_POST['image_url']??''));
 if($photo!=='' && (!filter_var($photo,FILTER_VALIDATE_URL) || !in_array(strtolower((string)parse_url($photo,PHP_URL_SCHEME)),['https'],true))){http_response_code(422);exit('画像URLはHTTPSの有効なURLを指定してください。');}
-$specs=['image_url'=>$photo,'image_source'=>trim((string)($_POST['image_source']??''))];
+$specs=[];
+if($id){$specQuery=$pdo->prepare('SELECT specs FROM gear_items WHERE id=?');$specQuery->execute([$id]);$specs=json_decode((string)$specQuery->fetchColumn(),true);if(!is_array($specs)){$specs=[];}}
+$specs['image_url']=$photo;
+$specs['image_source']=trim((string)($_POST['image_source']??''));
 $data[':specs']=json_encode($specs,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
 if($id){$data[':id']=$id;$pdo->prepare("UPDATE gear_items SET slug=:slug,type=:type,brand=:brand,name=:name,summary=:summary,price_yen=:price,weight_g=:weight,sink_sec_per_m=:sink,source_url=:source,source_checked_at=:checked,evidence_note=:note,specs=:specs,status=:status WHERE id=:id")->execute($data);}else{$pdo->prepare("INSERT INTO gear_items(slug,type,brand,name,summary,price_yen,weight_g,sink_sec_per_m,source_url,source_checked_at,evidence_note,specs,status) VALUES(:slug,:type,:brand,:name,:summary,:price,:weight,:sink,:source,:checked,:note,:specs,:status)")->execute($data);}header('Location:/admin/gear.php');exit;}
 $edit=null;if(isset($_GET['edit'])){$s=$pdo->prepare("SELECT * FROM gear_items WHERE id=?");$s->execute([(int)$_GET['edit']]);$edit=$s->fetch();}
