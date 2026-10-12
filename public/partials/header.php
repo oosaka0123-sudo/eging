@@ -9,8 +9,8 @@ $query=[];
 if (!empty($parts['query'])) {
     parse_str($parts['query'],$query);
 }
-if ($path==='/article.php' && isset($query['slug'])) {
-    $canonical='https://eging.rss7.net/article.php?slug='.rawurlencode((string)$query['slug']);
+if (in_array($path, ['/article.php', '/gear-item.php'], true) && isset($query['slug']) && is_scalar($query['slug'])) {
+    $canonical='https://eging.rss7.net'.$path.'?slug='.rawurlencode((string)$query['slug']);
 } else {
     $canonical='https://eging.rss7.net'.$path;
 }
