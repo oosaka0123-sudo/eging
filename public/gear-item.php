@@ -2,7 +2,7 @@
 require __DIR__.'/_runtime.php';
 $slug=trim((string)($_GET['slug']??''));
 $item=null;$unavailable=false;
-try{eging_require_bootstrap();$q=$pdo->prepare("SELECT * FROM gear_items WHERE slug=? AND status='published' LIMIT 1");$q->execute([$slug]);$item=$q->fetch(PDO::FETCH_ASSOC);}catch(Throwable $e){$unavailable=true;error_log('EGING detail: '.$e->getMessage());}
+try{if(!is_file(eging_config_file())){throw new RuntimeException('Database is not configured');}eging_require_bootstrap();$q=$pdo->prepare("SELECT * FROM gear_items WHERE slug=? AND status='published' LIMIT 1");$q->execute([$slug]);$item=$q->fetch(PDO::FETCH_ASSOC);}catch(Throwable $e){$unavailable=true;error_log('EGING detail: '.$e->getMessage());}
 if(!$item){http_response_code($unavailable?503:404);}
 function gh($text){return htmlspecialchars((string)$text,ENT_QUOTES,'UTF-8');}
 $specs=$item?json_decode((string)($item['specs']??''),true):[];
