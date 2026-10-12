@@ -4,6 +4,7 @@ $pageTitle='写真で比較｜エギングギアラボ';
 $pageDescription='エギングギアを実物写真・スペック・用途別に比較。';
 $items=[];$unavailable=false;
 try {
+  if(!is_file(eging_config_file())){throw new RuntimeException('Database is not configured');}
   eging_require_bootstrap();
   $items=$pdo->query("SELECT slug,type,brand,name,summary,price_yen,weight_g,sink_sec_per_m,specs,source_url,source_checked_at FROM gear_items WHERE status='published' ORDER BY type,brand,name")->fetchAll(PDO::FETCH_ASSOC);
 } catch(Throwable $e){$unavailable=true;error_log('EGING compare: '.$e->getMessage());}
