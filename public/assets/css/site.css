@@ -66,3 +66,50 @@ body.page-leaving:after{transform:scaleY(1)}
 .gear-compare-photo-guides .gear-reference-photo img{display:block;width:100%;height:clamp(230px,27vw,360px);object-fit:contain}
 .gear-compare-photo-guides .gear-reference-photo figcaption{padding:clamp(22px,3vw,36px);gap:10px}
 @media(max-width:720px){.gear-compare-photo-guides{grid-template-columns:1fr;gap:22px}.gear-compare-photo-guides .gear-reference-photo img{height:260px}}
+
+/* 2026-10-13: manufacturer-verified, database-independent Egi comparison */
+.compare-verified{padding-bottom:clamp(70px,9vw,120px)}
+.compare-verified__intro{max-width:940px;border-left:3px solid var(--acid);padding:14px 0 14px 21px;margin:0 0 36px;color:var(--muted);line-height:1.85}
+.compare-verified__intro p{margin:0}
+.verified-egi-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.verified-egi-card{border:1px solid var(--line);background:var(--panel);display:flex;flex-direction:column;min-width:0;transition:border-color .2s,transform .2s}
+.verified-egi-card:hover{border-color:var(--acid);transform:translateY(-3px)}
+.verified-egi-card__main{padding:clamp(22px,2.6vw,36px);flex:1;display:flex;flex-direction:column;color:inherit;text-decoration:none}
+.verified-egi-card__brand{font-size:.73rem;letter-spacing:.19em;color:var(--cyan);font-weight:700}
+.verified-egi-card__category{display:inline-block;align-self:flex-start;border:1px solid var(--line);padding:5px 10px;margin:14px 0 0;font-size:.74rem;color:var(--foam)}
+.verified-egi-card h3{font-size:clamp(1.4rem,2vw,2rem);line-height:1.37;margin:18px 0 10px}
+.verified-egi-card p{color:var(--muted);line-height:1.8;font-size:.91rem;margin:0 0 22px}
+.verified-egi-card__numbers{margin:auto 0 0;padding-top:17px;border-top:1px solid var(--line);display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.verified-egi-card__numbers div{min-width:0}
+.verified-egi-card__numbers dt{font-size:.72rem;color:var(--muted);margin-bottom:6px}
+.verified-egi-card__numbers dd{font-size:clamp(1.5rem,2.2vw,2.2rem);font-weight:700;letter-spacing:-.03em;margin:0}
+.verified-egi-card__numbers dd small{font-size:.78rem;font-weight:400;color:var(--muted)}
+.verified-egi-card__meter{margin-top:25px}
+.verified-egi-card__meter>span{display:block;color:var(--muted);font-size:.73rem;margin-bottom:9px}
+.verified-egi-card__track{height:7px;background:rgba(225,247,241,.11);overflow:hidden;border-radius:10px}
+.verified-egi-card__track>span{display:block;height:100%;background:var(--acid);border-radius:10px}
+.verified-egi-card__details{font-size:.84rem;color:var(--acid);margin-top:28px;font-weight:700}
+.verified-egi-card__source{display:block;padding:13px clamp(22px,2.6vw,36px);border-top:1px solid var(--line);font-size:.78rem;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+.verified-comparison-scroll{max-width:100%;overflow-x:auto;margin-top:40px;border:1px solid var(--line)}
+.verified-comparison-scroll:focus-visible{outline:2px solid var(--acid)}
+.verified-comparison-table{border-collapse:collapse;width:100%;min-width:760px}
+.verified-comparison-table caption{text-align:left;padding:18px 22px;color:var(--foam);font-weight:700}
+.verified-comparison-table thead{background:rgba(245,255,250,.08)}
+.verified-comparison-table th,.verified-comparison-table td{padding:17px 20px;border-bottom:1px solid var(--line);text-align:left;font-size:.88rem}
+.verified-comparison-table th{font-weight:650}
+.verified-comparison-table tbody tr:last-child>*{border-bottom:0}
+.verified-comparison-table a{color:var(--acid);text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
+.verified-comparison-note{line-height:1.8;max-width:920px;color:var(--muted);font-size:.88rem;margin:24px 0 0}
+.compare-detail-specs{max-width:1100px;display:grid;grid-template-columns:1fr 1fr;gap:0 30px;margin:20px 0 45px}
+.compare-detail-specs div{display:flex;justify-content:space-between;align-items:center;gap:16px;border-bottom:1px solid var(--line);padding:20px 0}
+.compare-detail-specs dt{color:var(--muted)}
+.compare-detail-specs dd{margin:0;text-align:right;font-weight:700}
+.compare-detail-insights{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:1100px}
+.compare-detail-insights article{padding:clamp(24px,3vw,40px);background:var(--panel);border:1px solid var(--line)}
+.compare-detail-insights h3{font-size:clamp(1.35rem,2.2vw,2rem);margin:15px 0}
+.compare-detail-insights p,.compare-detail-disclaimer p{color:var(--muted);line-height:1.9}
+.compare-detail-disclaimer{margin:36px 0 20px;padding:22px 24px;border:1px solid var(--line);max-width:1100px}
+.compare-detail-disclaimer p{margin-bottom:0}
+.compare-detail-actions{display:flex;flex-wrap:wrap;gap:12px;margin:30px 0}
+@media(max-width:1000px){.verified-egi-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:680px){.verified-egi-grid{grid-template-columns:1fr}.verified-egi-card__main{padding:24px}.verified-egi-card__source{padding:13px 24px}.compare-detail-specs,.compare-detail-insights{grid-template-columns:1fr}.compare-detail-specs{gap:0}.compare-detail-specs div{padding:16px 0}.verified-egi-card__numbers dd{font-size:2rem}.verified-comparison-scroll{margin-top:32px}}
