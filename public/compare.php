@@ -2,8 +2,8 @@
 require __DIR__.'/_runtime.php';
 // The product catalog is dynamic; prevent Lolipop Accelerator from serving stale HTML.
 header('Cache-Control: no-cache, no-store, must-revalidate, max-age=0');
-$pageTitle='写真で比較｜エギングギアラボ';
-$pageDescription='エギングギアを実物写真・スペック・用途別に比較。';
+$pageTitle='3.5号エギ5モデルのスペック比較｜エギングギアラボ';
+$pageDescription='エギ王K・セフィアクリンチ・アモラスジョイントなど3.5号エギ5モデルのメーカー公称重量・沈下速度・用途を比較。';
 $items=[];$unavailable=false;
 try {
   if(!is_file(eging_config_file())){throw new RuntimeException('Database is not configured');}
@@ -17,10 +17,37 @@ function gear_photo($row){
 }
 function gh($text){return htmlspecialchars((string)$text,ENT_QUOTES,'UTF-8');}
 $types=['egi'=>'エギ','rod'=>'ロッド','reel'=>'リール','pe'=>'PEライン','leader'=>'リーダー','snap'=>'スナップ','landing'=>'ランディング','bag'=>'バッグ','light'=>'ライト','lifejacket'=>'ライフジャケット','other'=>'その他'];
+$verifiedEgis=require __DIR__.'/_comparison_egis.php';
 require __DIR__.'/partials/header.php';
 ?>
-<main id="main"><section class="page-hero"><img class="page-art" src="/assets/visuals/gear-orbit.svg" alt=""><div><span class="kicker">COMPARE / PRODUCT GALLERY</span><h1>写真から、<br>比べる。</h1><p>実物写真と確認済みスペックを並べて比較。掲載写真はメーカー提供など利用可能なものに限ります。</p></div></section>
-<section class="section"><div class="section__head"><div><span class="kicker">PRODUCTS</span><h2>ギア比較</h2></div><p>写真をクリックすると商品詳細へ。表示価格は参考価格で、最新の販売価格ではありません。</p></div>
+<main id="main">
+<section class="page-hero"><img class="page-art" src="/assets/visuals/gear-orbit.svg" alt=""><div><span class="kicker">COMPARE / VERIFIED SPECIFICATIONS</span><h1>条件から、<br>比べる。</h1><p>まずは3.5号エギ5モデル。メーカー公表スペックを同じ基準で比較し、違いが分かるよう整理しました。</p></div></section>
+<section class="section compare-verified" aria-labelledby="egis-compare-title">
+<div class="section__head"><div><span class="kicker">SPECIFICATION / 3.5 GO</span><h2 id="egis-compare-title">3.5号エギ<br>5モデル比較</h2></div><p>YAMASHITA・SHIMANO・DAIWAのメーカー公式情報を照合。<strong>重量と沈下速度</strong>を揃えて比較できます。</p></div>
+<div class="compare-verified__intro"><p>公開情報の確認日：2026年10月13日。<strong>メーカー公称値</strong>であり実測結果・釣果ランキングではありません。風・潮流・ライン・姿勢によって実際の沈み方は異なります。</p></div>
+<div class="verified-egi-grid">
+<?php foreach($verifiedEgis as $slug=>$egi): ?>
+<article class="verified-egi-card">
+  <a class="verified-egi-card__main" href="/gear-compare-item.php?model=<?=rawurlencode($slug)?>" aria-label="<?=gh($egi['brand'].' '.$egi['name'])?>の商品比較詳細を表示">
+    <span class="verified-egi-card__brand"><?=gh($egi['brand'])?></span>
+    <span class="verified-egi-card__category"><?=gh($egi['type'])?></span>
+    <h3><?=gh($egi['name'])?></h3>
+    <p><?=gh($egi['use'])?></p>
+    <dl class="verified-egi-card__numbers"><div><dt>重量</dt><dd><?=gh(rtrim(rtrim(sprintf('%.2f',$egi['weight']),'0'),'.'))?> <small>g</small></dd></div><div><dt>沈下速度</dt><dd><?=gh($egi['sink'])?> <small>秒/m</small></dd></div></dl>
+    <div class="verified-egi-card__meter"><span>沈下にかかる時間（1mあたり）</span><div class="verified-egi-card__track"><span style="width:<?=min(100,max(1,($egi['sink']/8)*100))?>%"></span></div></div>
+    <span class="verified-egi-card__details">詳しい適合条件を見る <span aria-hidden="true">→</span></span>
+  </a>
+  <a class="verified-egi-card__source" href="<?=gh($egi['source'])?>" target="_blank" rel="noopener noreferrer">メーカー公式スペック ↗</a>
+</article>
+<?php endforeach;?>
+</div>
+<div class="verified-comparison-scroll" role="region" aria-label="3.5号エギの横並び比較表" tabindex="0">
+<table class="verified-comparison-table"><caption>5モデルのスペック一覧（全て3.5号）</caption><thead><tr><th scope="col">モデル</th><th scope="col">重量</th><th scope="col">沈下速度</th><th scope="col">タイプ</th><th scope="col">詳細</th></tr></thead><tbody>
+<?php foreach($verifiedEgis as $slug=>$egi):?><tr><th scope="row"><?=gh($egi['brand'].' '.$egi['name'])?></th><td><?=gh(rtrim(rtrim(sprintf('%.2f',$egi['weight']),'0'),'.'))?> g</td><td><?=gh($egi['sink'])?> 秒/m</td><td><?=gh($egi['type'])?></td><td><a href="/gear-compare-item.php?model=<?=rawurlencode($slug)?>">詳細 →</a></td></tr><?php endforeach;?>
+</tbody></table></div>
+<p class="verified-comparison-note">沈下速度は「秒/m」の数値が<strong>大きいほどゆっくり沈む</strong>ことを示します。商品写真は転載許諾を確認できたものから追加します。製品ごとの画像はまだ掲載していません。</p>
+</section>
+<section class="section"><div class="section__head"><div><span class="kicker">PRODUCT GALLERY / CMS</span><h2>商品写真・<br>追加ギア</h2></div><p>掲載を確認できた商品写真と追加情報を表示します。写真・商品名は個別ページにリンクします。</p></div>
 <?php if($unavailable || !$items):?>
 <p role="status"><?= $unavailable?'商品データを更新中です。':'比較対象の商品を準備中です。' ?> 以下は製品型番とは無関係の実物参考写真です。</p>
 <div class="gear-compare-photo-guides">
