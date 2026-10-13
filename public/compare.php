@@ -19,8 +19,12 @@ require __DIR__.'/partials/header.php';
 ?>
 <main id="main"><section class="page-hero"><img class="page-art" src="/assets/visuals/gear-orbit.svg" alt=""><div><span class="kicker">COMPARE / PRODUCT GALLERY</span><h1>写真から、<br>比べる。</h1><p>実物写真と確認済みスペックを並べて比較。掲載写真はメーカー提供など利用可能なものに限ります。</p></div></section>
 <section class="section"><div class="section__head"><div><span class="kicker">PRODUCTS</span><h2>ギア比較</h2></div><p>写真をクリックすると商品詳細へ。表示価格は参考価格で、最新の販売価格ではありません。</p></div>
-<?php if($unavailable):?><p role="status">現在、商品データに接続できません。</p>
-<?php elseif(!$items):?><p>比較対象の商品は現在準備中です。</p>
+<?php if($unavailable || !$items):?>
+<p role="status"><?= $unavailable?'商品データを更新中です。':'比較対象の商品を準備中です。' ?> 以下は製品型番とは無関係の実物参考写真です。</p>
+<div class="gear-compare-photo-guides">
+<figure class="gear-reference-photo"><img src="https://upload.wikimedia.org/wikipedia/commons/4/48/Egi.jpg" loading="lazy" decoding="async" alt="カスタマイズされたエギの実物参考写真。特定の販売商品ではありません。"><figcaption><strong>エギの形を写真で見る</strong><span>ボディ・シンカー・カンナを確認。機種別の写真ではありません。</span><small><a href="https://commons.wikimedia.org/wiki/File:Egi.jpg" target="_blank" rel="noopener noreferrer">Rickygap / Wikimedia Commons</a> ・ <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 3.0</a>（無加工）</small></figcaption></figure>
+<figure class="gear-reference-photo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/A_spinning_reel_on_a_rod.jpg/500px-A_spinning_reel_on_a_rod.jpg" loading="lazy" decoding="async" alt="竿に付いたスピニングリールの実物参考写真。特定の販売商品ではありません。"><figcaption><strong>ロッド・リールを写真で見る</strong><span>スプールとリールフットなど、基本構造を確認できます。</span><small><a href="https://commons.wikimedia.org/wiki/File:A_spinning_reel_on_a_rod.jpg" target="_blank" rel="noopener noreferrer">JaredMcKenzie / Wikimedia Commons</a> ・ <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noopener noreferrer">CC0</a></small></figcaption></figure>
+</div><p style="margin-top:32px"><a class="cta cta--primary" href="/gear.php">ギアの選び方へ →</a></p>
 <?php else:?>
 <div class="gear-gallery">
 <?php foreach($items as $item):$photo=gear_photo($item); ?>
