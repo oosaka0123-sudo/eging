@@ -9,7 +9,9 @@ $query=[];
 if (!empty($parts['query'])) {
     parse_str($parts['query'],$query);
 }
-if (in_array($path, ['/article.php', '/gear-item.php'], true) && isset($query['slug']) && is_scalar($query['slug'])) {
+if ($path === '/gear-compare-item.php' && isset($query['model']) && is_scalar($query['model'])) {
+    $canonical='https://eging.rss7.net'.$path.'?model='.rawurlencode((string)$query['model']);
+} elseif (in_array($path, ['/article.php', '/gear-item.php'], true) && isset($query['slug']) && is_scalar($query['slug'])) {
     $canonical='https://eging.rss7.net'.$path.'?slug='.rawurlencode((string)$query['slug']);
 } else {
     $canonical='https://eging.rss7.net'.$path;
