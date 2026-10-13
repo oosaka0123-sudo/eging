@@ -59,3 +59,10 @@ body.page-leaving:after{transform:scaleY(1)}
 .gear-reference-photo small{font-size:.76rem;line-height:1.7}
 .gear-reference-photo small a{text-decoration:underline;text-underline-offset:3px;color:#cbe4df}
 @media(max-width:800px){.gear-reference-photo{grid-template-columns:1fr}.gear-reference-photo img{height:auto;max-height:380px}.gear-reference-photo figcaption{gap:12px}}
+
+/* Real, license-cleared editorial photos shown only while comparison database is unavailable. */
+.gear-compare-photo-guides{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;margin-top:28px}
+.gear-compare-photo-guides .gear-reference-photo{display:block;margin:0}
+.gear-compare-photo-guides .gear-reference-photo img{display:block;width:100%;height:clamp(230px,27vw,360px);object-fit:contain}
+.gear-compare-photo-guides .gear-reference-photo figcaption{padding:clamp(22px,3vw,36px);gap:10px}
+@media(max-width:720px){.gear-compare-photo-guides{grid-template-columns:1fr;gap:22px}.gear-compare-photo-guides .gear-reference-photo img{height:260px}}
