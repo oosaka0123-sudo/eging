@@ -1,5 +1,7 @@
 <?php
 require __DIR__.'/_runtime.php';
+// The product catalog is dynamic; prevent Lolipop Accelerator from serving stale HTML.
+header('Cache-Control: no-cache, no-store, must-revalidate, max-age=0');
 $pageTitle='写真で比較｜エギングギアラボ';
 $pageDescription='エギングギアを実物写真・スペック・用途別に比較。';
 $items=[];$unavailable=false;
