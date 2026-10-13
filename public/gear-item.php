@@ -1,5 +1,7 @@
 <?php
 require __DIR__.'/_runtime.php';
+// The product catalog is dynamic; prevent Lolipop Accelerator from serving stale HTML.
+header('Cache-Control: no-cache, no-store, must-revalidate, max-age=0');
 $slug=trim((string)($_GET['slug']??''));
 $item=null;$unavailable=false;
 try{if(!is_file(eging_config_file())){throw new RuntimeException('Database is not configured');}eging_require_bootstrap();$q=$pdo->prepare("SELECT * FROM gear_items WHERE slug=? AND status='published' LIMIT 1");$q->execute([$slug]);$item=$q->fetch(PDO::FETCH_ASSOC);}catch(Throwable $e){$unavailable=true;error_log('EGING detail: '.$e->getMessage());}
