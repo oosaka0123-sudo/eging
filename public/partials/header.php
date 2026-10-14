@@ -39,7 +39,7 @@ function egl_header_escape($text){return htmlspecialchars((string)$text,ENT_QUOT
  </nav>
  <div class="egl-header__right"><button type="button" class="egl-icon-btn" id="shareSite" aria-label="サイトを共有" title="サイトを共有"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.4 11l7.2-4.7M8.4 13l7.2 4.7"/></svg></button><button type="button" class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="mobileMenu" aria-label="メニューを開く"><span></span></button></div>
 </header>
-<div class="mobile-menu egl-mobile-menu" id="mobileMenu" aria-hidden="true">
+<div class="mobile-menu egl-mobile-menu" id="mobileMenu" aria-hidden="true" inert>
 <nav aria-label="スマートフォン用メニュー">
 <a href="/"><span class="index">01</span>トップ</a>
 <a href="/conditions.php"><span class="index">02</span>条件から選ぶ</a>
