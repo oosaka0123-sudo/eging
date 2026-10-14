@@ -22,7 +22,7 @@ require __DIR__.'/partials/header.php';
 <section class="egl-section">
  <div class="egl-container">
   <div class="egl-heading"><div><span class="egl-kicker">01 / FIELD CONDITIONS</span><h2>釣り場の条件を変更</h2></div><p>選び直しても、比較したいモデルの情報はメーカー公表値で統一しています。</p></div>
-  <div class="egl-scenes">
+  <div class="egl-scenes egl-scenes--compact">
    <?php foreach(['shallow','standard','current'] as $key):$s=$scenes[$key];?>
    <a class="egl-scene<?=$selected===$key?' is-selected':''?>" href="/compare.php?scene=<?=egl_h($key)?>" <?=$selected===$key?'aria-current="page"':''?>>
      <span><b><?=egl_h($s['label'])?></b><small><?=egl_h($s['detail'])?></small></span><span class="egl-scene__arrow" aria-hidden="true">↗</span>
@@ -44,6 +44,7 @@ require __DIR__.'/partials/header.php';
 <section class="egl-section">
  <div class="egl-container">
   <div class="egl-heading"><div><span class="egl-kicker">03 / SPEC TABLE</span><h2>数値を横並びで比較</h2></div><p>すべて3.5号。沈下速度は参考値で、秒数が長いほどゆっくり沈む目安です。</p></div>
+  <p class="egl-note egl-swipe-hint">← 表は左右にスクロールできます →</p>
   <div class="egl-spec-table-wrap" role="region" aria-label="3.5号エギ重量沈下速度一覧" tabindex="0">
    <table class="egl-spec-table">
     <caption>公称スペックの一覧（掲載5モデル）</caption>
