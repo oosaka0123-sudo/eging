@@ -1,22 +1,21 @@
 <?php
-$pageTitle='GEAR｜エギングギアラボ';
-$pageDescription='エギ・ロッド・リール・ラインなど、写真と基本スペックから釣具の役割を確認するギアハブ。';
+$pageTitle='エギ・ロッド・リールの選び方｜エギングギアラボ';
+$pageDescription='エギ・ロッド・リール・ラインの役割を整理し、最初は3.5号エギの公称スペックから比べられる案内ページ。';
 require __DIR__.'/partials/header.php';
 ?>
-<main id="main">
-<section class="page-hero"><img class="page-art" src="/assets/visuals/gear-orbit.svg" alt=""><div><span class="kicker">GEAR / 02</span><h1>道具を、<br>分解する。</h1><p>名前や人気ではなく、役割とスペックへ分解して選ぶための入口です。</p></div></section>
-<section class="section" id="egi">
-<div class="section__head"><div><span class="kicker">EGI</span><h2>エギ</h2></div><p>号数、沈下速度、ノーマル／シャロー／ディープ、カラー、ラトル、姿勢。条件に効く要素を確認します。</p></div>
-<figure class="gear-reference-photo">
-<img src="https://upload.wikimedia.org/wikipedia/commons/4/48/Egi.jpg" alt="カスタマイズエギの実物参考写真。特定メーカーの販売商品ではありません。" width="640" height="480" loading="lazy" decoding="async">
-<figcaption><strong>エギの外観（参考写真）</strong><span>針・ボディ・シンカー形状を確認できます。※掲載商品そのものの写真ではありません。</span><small>撮影／提供：<a href="https://commons.wikimedia.org/wiki/File:Egi.jpg" target="_blank" rel="noopener noreferrer">Rickygap / Wikimedia Commons</a> ・ <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 3.0</a>（画像は無加工）</small></figcaption>
-</figure>
-</section>
-<section class="section" id="rod"><div class="section__head"><div><span class="kicker">ROD / REEL</span><h2>ロッドと<br>リール</h2></div><p>ロッドの長さ・パワー・自重・適合エギ、リールの番手と糸巻き量。飛距離と操作性を考えます。</p></div>
-<figure class="gear-reference-photo">
-<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/A_spinning_reel_on_a_rod.jpg/500px-A_spinning_reel_on_a_rod.jpg" alt="釣り竿に取り付けられたスピニングリールの実物参考写真。エギング専用モデルではありません。" width="500" height="667" loading="lazy" decoding="async">
-<figcaption><strong>ロッドとスピニングリールの構造（参考写真）</strong><span>リールフット・スプール・ハンドルとグリップの位置関係。※機種別製品画像ではありません。</span><small>撮影：<a href="https://commons.wikimedia.org/wiki/File:A_spinning_reel_on_a_rod.jpg" target="_blank" rel="noopener noreferrer">JaredMcKenzie / Wikimedia Commons</a> ・ <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noopener noreferrer">CC0</a></small></figcaption>
-</figure></section>
-<section class="section" id="system"><div class="section__head"><div><span class="kicker">REEL / LINE / ACCESSORY</span><h2>システムとして<br>揃える。</h2></div><p>リール、PE、リーダー、小物まで、ロッドとエギに整合するかで見ます。実際の製品の画像・仕様は、確認できたものから商品詳細に掲載します。</p></div><a class="cta cta--primary" href="/compare.php">写真付き商品比較へ →</a></section>
+<main id="main" class="egl-page">
+<section class="egl-detail-hero"><div class="egl-container">
+<nav class="egl-breadcrumbs" aria-label="パンくず"><a href="/">トップ</a><span>›</span><span>ギアの選び方</span></nav>
+<span class="egl-kicker">TACKLE BASICS</span><h1>釣り場から、<br>ギアを組み立てる。</h1>
+<p class="egl-lead">エギ、ロッド、リール、ラインは組み合わせて使う道具です。まずはエギ3.5号の性能を比べるところから始めましょう。</p>
+</div></section>
+<section class="egl-section"><div class="egl-container">
+<div class="egl-heading"><div><span class="egl-kicker">START WITH EGI</span><h2>まずはエギの違いから</h2></div><p>現在、商品別の比較を提供しているのは3.5号エギ5モデルです。</p></div>
+<div class="egl-guides">
+<article class="egl-guide"><span class="egl-kicker">01 / EGI</span><h3>エギ</h3><p>号数、重量、沈下速度を比べて、釣り場の条件に合わせて絞る。</p><a href="/compare.php">5モデルを比べる →</a></article>
+<article class="egl-guide"><span class="egl-kicker">02 / ROD + REEL</span><h3>ロッド・リール</h3><p>長さ、操作性、ロッドの適合エギ重量、リールの番手などを合わせる。商品別比較は現在整備中です。</p><a href="/guide.php">選び方を学ぶ →</a></article>
+<article class="egl-guide"><span class="egl-kicker">03 / LINE</span><h3>PE・リーダー</h3><p>飛距離・操作性と擦れへの強さのバランスを考える。商品別の価格比較は未掲載です。</p><a href="/conditions.php">条件から考える →</a></article>
+</div>
+</div></section>
 </main>
-<?php require __DIR__.'/partials/footer.php'; ?>
+<?php require __DIR__.'/partials/footer.php';
