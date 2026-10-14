@@ -138,3 +138,29 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--egl-lime);outline-o
 @media(prefers-reduced-motion:reduce){.egl-scene,.egl-btn,.egl-toast{transition:none!important}html{scroll-behavior:auto}}
 
 body.egl-menu-open{overflow:hidden}
+
+/* Final mobile-first fold audit: show choices and comparison products earlier. */
+@media(max-width:720px){
+ .egl-hero{padding-top:23px;padding-bottom:22px}
+ .egl-hero h1{margin:10px 0;font-size:clamp(2.05rem,8vw,3.1rem)}
+ .egl-hero p{margin-bottom:15px}
+ .egl-hero__aside{display:none}
+ .egl-hero__actions .egl-btn{min-height:44px;padding:9px 11px;font-size:.89rem}
+ .egl-section{padding:23px 0}
+ .egl-section--tight{padding:21px 0 27px}
+ .egl-heading{margin-bottom:14px}
+ .egl-heading p{line-height:1.65}
+ .egl-detail-hero{padding:21px 0 16px}
+ .egl-detail-hero h1{font-size:clamp(1.94rem,8vw,2.6rem);margin:10px 0}
+ .egl-detail-hero .egl-lead{font-size:1rem;line-height:1.7}
+ .egl-scenes--compact{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+ .egl-scenes--compact .egl-scene{padding:11px 5px;min-height:48px;align-items:center;justify-content:center;text-align:center;border-radius:10px}
+ .egl-scenes--compact .egl-scene b{font-size:.84rem;white-space:nowrap}
+ .egl-scenes--compact .egl-scene small,.egl-scenes--compact .egl-scene__arrow{display:none}
+ .egl-explain{padding:13px 15px;margin-bottom:13px;font-size:.9rem;line-height:1.65}
+ .egl-explain__notice{line-height:1.55}
+ .egl-product__desc{font-size:.875rem}
+ .egl-product__facts{display:grid;grid-template-columns:minmax(0,.65fr) minmax(0,1fr);width:100%;gap:10px}
+ .egl-product__facts dd{font-size:1rem}
+ .egl-swipe-hint{margin:0 0 9px;font-size:.78rem}
+}
