@@ -1,38 +1,70 @@
 <?php
-require __DIR__.'/_runtime.php';
+require __DIR__.'/partials/egi-functions.php';
 header('Cache-Control: no-cache, no-store, must-revalidate, max-age=0');
-function egi_h($value): string {return htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');}
-$models=require __DIR__.'/_comparison_egis.php';
-$slug=trim((string)($_GET['model']??''));
-$egi=$models[$slug]??null;
-if(!$egi){http_response_code(404);}
-$pageTitle=$egi?($egi['brand'].' '.$egi['name'].' 3.5号 比較詳細｜エギングギアラボ'):'商品が見つかりません｜エギングギアラボ';
-$pageDescription=$egi?$egi['reason']:'指定された比較商品が見つかりません。';
+$models=egl_egis();
+$slug=isset($_GET['model'])&&is_string($_GET['model'])?$_GET['model']:'';
+$model=$models[$slug]??null;
+if(!$model)http_response_code(404);
+$pageTitle=$model?($model['brand'].' '.$model['name'].'｜3.5号スペック・向く条件｜エギングギアラボ'):'商品が見つかりません｜エギングギアラボ';
+$pageDescription=$model?$model['use'].'。重量とメーカー公表の沈下速度、向く条件と注意点を解説。':'指定された商品は見つかりません。';
 require __DIR__.'/partials/header.php';
 ?>
-<main id="main">
-<?php if(!$egi):?>
-<section class="section"><span class="kicker">404 / NOT FOUND</span><h1>比較商品が見つかりません</h1><p><a class="cta" href="/compare.php">← 比較一覧へ</a></p></section>
-<?php else:?>
-<section class="page-hero"><img class="page-art" src="/assets/visuals/gear-orbit.svg" alt=""><div><span class="kicker"><?=egi_h($egi['brand'])?> / EGI 3.5 GO</span><h1><?=egi_h($egi['name'])?></h1><p><?=egi_h($egi['use'])?></p></div></section>
-<section class="section compare-detail-section">
-<div class="section__head"><div><span class="kicker">MODEL DETAILS</span><h2>スペックと<br>適合条件</h2></div><p>メーカーの一次情報をもとに、フォール速度と構造の違いを整理。実釣レビューや釣果の保証ではありません。</p></div>
-<dl class="compare-detail-specs">
-<div><dt>メーカー</dt><dd><?=egi_h($egi['brand'])?></dd></div>
-<div><dt>モデル</dt><dd><?=egi_h($egi['name'])?></dd></div>
-<div><dt>サイズ</dt><dd><?=egi_h($egi['size'])?></dd></div>
-<div><dt>タイプ</dt><dd><?=egi_h($egi['type'])?></dd></div>
-<div><dt>重量（公称値）</dt><dd><?=egi_h(rtrim(rtrim(sprintf('%.2f',$egi['weight']),'0'),'.'))?> g</dd></div>
-<div><dt>沈下速度（参考値）</dt><dd><?=egi_h($egi['sink'])?> 秒/m</dd></div>
-</dl>
-<div class="compare-detail-insights">
-<article><span class="kicker">DESIGN</span><h3>モデルの特徴</h3><p><?=egi_h($egi['feature'])?></p></article>
-<article><span class="kicker">FIELD CONDITIONS</span><h3>どういう条件で候補になる？</h3><p><?=egi_h($egi['reason'])?></p></article>
-</div>
-<div class="compare-detail-disclaimer"><strong>商品写真について</strong><p>このページでは未許諾のメーカー写真を複製・転載していません。公式製品ページでは写真と詳しい仕様を確認できます。</p></div>
-<div class="compare-detail-actions"><a class="cta cta--primary" href="<?=egi_h($egi['source'])?>" target="_blank" rel="noopener noreferrer">メーカー公式ページで写真を確認 ↗</a><a class="cta" href="/compare.php">← 5モデル比較に戻る</a></div>
-<p class="gear-note">メーカー公表仕様の確認日：2026年10月13日。沈下速度は海況やタックルにより変動します。実売価格・在庫は含めていません。</p>
+<main id="main" class="egl-page">
+<?php if(!$model):?>
+<section class="egl-section"><div class="egl-container"><h1 class="egl-main-title">商品が見つかりません</h1><p class="egl-lead">URLをお確かめください。</p><a class="egl-btn egl-btn--primary" href="/compare.php">比較ページへ戻る →</a></div></section>
+<?php else:
+$photo=egl_photo($model);
+$purchase=egl_purchase($model);
+?>
+<section class="egl-detail-hero">
+ <div class="egl-container">
+  <nav class="egl-breadcrumbs" aria-label="パンくず"><a href="/">トップ</a><span>›</span><a href="/compare.php">エギの比較</a><span>›</span><span><?=egl_h($model['name'])?></span></nav>
+  <span class="egl-kicker"><?=egl_h($model['brand'])?> / 3.5 GO / MODEL FACTS</span>
+  <h1><?=egl_h($model['name'])?></h1>
+  <p class="egl-lead"><?=egl_h($model['use'])?></p>
+ </div>
 </section>
+<section class="egl-section">
+ <div class="egl-container egl-detail-grid">
+  <div>
+   <div class="egl-detail-card">
+    <span class="egl-kicker">OFFICIAL SPECIFICATIONS</span>
+    <h2>3.5号・メーカー公表スペック</h2>
+    <dl class="egl-detail-specs">
+     <div><dt>メーカー</dt><dd><?=egl_h($model['brand'])?></dd></div>
+     <div><dt>モデル</dt><dd><?=egl_h($model['name'])?></dd></div>
+     <div><dt>号数</dt><dd><?=egl_h($model['size'])?></dd></div>
+     <div><dt>タイプ</dt><dd><?=egl_h($model['type'])?></dd></div>
+     <div><dt>重量</dt><dd><?=egl_h($model['weight'])?>g</dd></div>
+     <div><dt>沈下速度</dt><dd>約<?=egl_h($model['sink'])?>秒/m</dd></div>
+    </dl>
+    <p class="egl-note">メーカーの掲載値／2026年10月14日確認。実釣の測定値や釣果予測ではありません。</p>
+   </div>
+   <div class="egl-detail-actions">
+    <?php if($purchase):?><a class="egl-btn egl-btn--primary" href="<?=egl_h($purchase)?>" target="_blank" rel="nofollow sponsored noopener noreferrer">Yahoo!ショッピングで見る（PR） ↗</a>
+    <?php else:?><a class="egl-btn egl-btn--primary" href="<?=egl_h($model['source'])?>" target="_blank" rel="noopener noreferrer">メーカー公式ページで製品を確認 ↗</a><?php endif;?>
+    <a class="egl-btn egl-btn--quiet" href="/compare.php">← 他のエギと比較</a>
+   </div>
+   <?php if(!$purchase):?><p class="egl-note">※ 当サイト経由の購入先リンクは現在掲載していません。Yahoo!等での販売価格・在庫はこのページでは案内していません。</p><?php endif;?>
+  </div>
+  <div class="egl-detail-photo">
+    <?php if($photo):?><img src="<?=egl_h($photo)?>" alt="<?=egl_h($model['brand'].' '.$model['name'])?>の製品写真">
+    <?php else:?><div class="egl-detail-photo__empty"><strong>3.5 GO</strong><span>このモデルの製品写真は未掲載です。<br>正確な写真はメーカー公式ページで確認できます。</span><a class="egl-btn egl-btn--sm" href="<?=egl_h($model['source'])?>" target="_blank" rel="noopener noreferrer">公式の製品写真を見る ↗</a></div><?php endif;?>
+  </div>
+ </div>
+</section>
+<section class="egl-section egl-section--tight">
+ <div class="egl-container">
+  <div class="egl-heading"><div><span class="egl-kicker">FIELD NOTES</span><h2>どんな条件で検討する？</h2></div><p>メーカー公表の構造と数値に基づく選択の考え方です。現場での比較試験結果ではありません。</p></div>
+  <div class="egl-guides">
+   <article class="egl-guide"><span class="egl-kicker">モデルの特徴</span><h3>設計上のポイント</h3><p><?=egl_h($model['feature'])?></p></article>
+   <article class="egl-guide"><span class="egl-kicker">条件の目安</span><h3>候補になる理由</h3><p><?=egl_h($model['reason'])?></p></article>
+   <article class="egl-guide"><span class="egl-kicker">購入前に確認</span><h3>数字だけでは決まらない</h3><p>潮の流れ、風、ラインの太さによってフォール姿勢や沈下時間は変わります。水深がある場所では専用ディープモデルも比較してください。</p></article>
+  </div>
+  <p class="egl-note">出典：<a href="<?=egl_h($model['source'])?>" target="_blank" rel="noopener noreferrer" style="color:var(--egl-mint);text-decoration:underline"><?=egl_h($model['brand'])?> 公式製品ページ ↗</a>。情報の更新が見つかった場合は公称値を再確認します。</p>
+ </div>
+</section>
+<section class="egl-section egl-section--tight"><div class="egl-container"><div class="egl-banner"><div><h2>同じ号数でも、沈む速さが違います。</h2><p>5機種の重量・沈下速度を並べて比較できます。</p></div><a class="egl-btn egl-btn--primary" href="/compare.php">比較へ戻る →</a></div></div></section>
 <?php endif;?>
 </main>
 <?php require __DIR__.'/partials/footer.php';
