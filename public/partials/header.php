@@ -24,7 +24,7 @@ function egl_header_escape($text){return htmlspecialchars((string)$text,ENT_QUOT
 <link rel="canonical" href="<?=egl_header_escape($canonical)?>">
 <meta property="og:type" content="website"><meta property="og:site_name" content="エギングギアラボ"><meta property="og:title" content="<?=egl_header_escape($pageTitle)?>"><meta property="og:description" content="<?=egl_header_escape($pageDescription)?>"><meta property="og:url" content="<?=egl_header_escape($canonical)?>"><meta property="og:image" content="<?=egl_header_escape($ogImage)?>"><meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/assets/brand/favicon.svg" type="image/svg+xml"><link rel="manifest" href="/manifest.webmanifest">
-<link rel="stylesheet" href="/assets/css/site.css"><link rel="stylesheet" href="/assets/css/experience.css?v=20261014r1">
+<link rel="stylesheet" href="/assets/css/site.css"><link rel="stylesheet" href="/assets/css/experience.css?v=20261014r2">
 <script type="application/ld+json"><?=json_encode(['@context'=>'https://schema.org','@type'=>'WebSite','name'=>'エギングギアラボ','alternateName'=>'EGING GEAR LAB','url'=>'https://eging.rss7.net/','description'=>$pageDescription],JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT)?></script>
 </head>
 <body>
