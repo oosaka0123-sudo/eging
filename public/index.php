@@ -13,7 +13,7 @@ require __DIR__.'/partials/header.php';
    <span class="egl-kicker">EGING GEAR LAB / CONDITIONS FIRST</span>
    <h1>釣り場に合うエギを、<br><em>比べて選ぶ。</em></h1>
    <p class="egl-lead">浅場か、堤防か、潮が速い場所か。<br>条件を選ぶと、3.5号エギの候補を3モデルまで絞り、重さ・沈下速度・違いを比較できます。</p>
-   <div class="egl-hero__actions"><a class="egl-btn egl-btn--primary" href="#choose">釣り場の条件を選ぶ ↓</a><a class="egl-btn egl-btn--quiet" href="/compare.php">5モデルを全部比較 →</a></div>
+   <div class="egl-hero__actions"><a class="egl-btn egl-btn--primary" href="#choose">条件を選ぶ ↓</a><a class="egl-btn egl-btn--quiet" href="/compare.php">全5モデルを比較 →</a></div>
   </div>
   <aside class="egl-hero__aside" aria-label="沈下速度の違いの例">
    <span class="egl-hero__aside-title">沈下速度が違えば、選び方も変わる。</span>
