@@ -1,1 +1,11 @@
-<footer class="site-footer"><div class="footer-grid"><div><div class="footer-brand">EGING<br>GEAR LAB</div></div><div><h4>Explore</h4><a href="/gear.php">ギアから探す</a><a href="/conditions.php">条件から探す</a><a href="/compare.php">比較する</a></div><div><h4>Learn</h4><a href="/guide.php">はじめてのエギング</a><a href="/concept.php">サイトコンセプト</a><a href="/privacy.php">プライバシー</a></div><div><h4>Contact</h4><a href="/contact.php">お問い合わせ</a><a href="/concept.php#policy">編集・広告ポリシー</a></div></div><div class="copyright"><span>© <?=date('Y')?> EGING GEAR LAB</span><span>Condition first. Gear second.</span></div></footer><script src="/assets/js/site.js" defer></script></body></html>
+<footer class="site-footer egl-footer">
+ <div class="egl-footer__grid">
+  <div><a href="/" class="egl-footer__logo">EGING<br>GEAR LAB<span>.</span></a><p>釣り場の条件から、理由のある道具選びを。</p></div>
+  <div><h2>探す</h2><a href="/conditions.php">条件から選ぶ</a><a href="/compare.php">3.5号エギ5モデルを比較</a><a href="/guide.php">選び方ガイド</a></div>
+  <div><h2>サイトについて</h2><a href="/concept.php">編集・広告ポリシー</a><a href="/privacy.php">プライバシー</a><a href="/contact.php">お問い合わせ</a></div>
+ </div>
+ <div class="egl-footer__bottom"><span>© <?=date('Y')?> EGING GEAR LAB</span><span>メーカー公表値に基づく比較 / 実釣評価ではありません</span><span>Powered by RSS7.ai Works</span></div>
+</footer>
+<div role="status" id="eglToast" class="egl-toast" aria-live="polite"></div>
+<script src="/assets/js/experience.js?v=20261014r1" defer></script>
+</body></html>

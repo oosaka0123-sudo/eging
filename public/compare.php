@@ -1,67 +1,59 @@
 <?php
-require __DIR__.'/_runtime.php';
-// The product catalog is dynamic; prevent Lolipop Accelerator from serving stale HTML.
+require __DIR__.'/partials/egi-functions.php';
 header('Cache-Control: no-cache, no-store, must-revalidate, max-age=0');
-$pageTitle='3.5号エギ5モデルのスペック比較｜エギングギアラボ';
-$pageDescription='エギ王K・セフィアクリンチ・アモラスジョイントなど3.5号エギ5モデルのメーカー公称重量・沈下速度・用途を比較。';
-$items=[];$unavailable=false;
-try {
-  if(!is_file(eging_config_file())){throw new RuntimeException('Database is not configured');}
-  eging_require_bootstrap();
-  $items=$pdo->query("SELECT slug,type,brand,name,summary,price_yen,weight_g,sink_sec_per_m,specs,source_url,source_checked_at FROM gear_items WHERE status='published' ORDER BY type,brand,name")->fetchAll(PDO::FETCH_ASSOC);
-} catch(Throwable $e){$unavailable=true;error_log('EGING compare: '.$e->getMessage());}
-function gear_photo($row){
-  $s=json_decode((string)($row['specs']??''),true);
-  $url=trim((string)($s['image_url']??''));
-  return filter_var($url,FILTER_VALIDATE_URL)&&parse_url($url,PHP_URL_SCHEME)==='https'?$url:'';
-}
-function gh($text){return htmlspecialchars((string)$text,ENT_QUOTES,'UTF-8');}
-$types=['egi'=>'エギ','rod'=>'ロッド','reel'=>'リール','pe'=>'PEライン','leader'=>'リーダー','snap'=>'スナップ','landing'=>'ランディング','bag'=>'バッグ','light'=>'ライト','lifejacket'=>'ライフジャケット','other'=>'その他'];
-$verifiedEgis=require __DIR__.'/_comparison_egis.php';
+$models=egl_egis();
+$scenes=egl_scenes();
+$selected=isset($_GET['scene']) && is_string($_GET['scene']) ? $_GET['scene'] : 'all';
+if(!array_key_exists($selected,$scenes))$selected='all';
+$current=$scenes[$selected];
+$pageTitle=($selected==='all'?'3.5号エギ5モデル比較':$current['label'].'で比較').'｜エギングギアラボ';
+$pageDescription='エギ王K・セフィアクリンチ・アモラスジョイントなどを、メーカー公表の重量・沈下速度・用途で比較。';
 require __DIR__.'/partials/header.php';
 ?>
-<main id="main">
-<section class="page-hero"><img class="page-art" src="/assets/visuals/gear-orbit.svg" alt=""><div><span class="kicker">COMPARE / VERIFIED SPECIFICATIONS</span><h1>条件から、<br>比べる。</h1><p>まずは3.5号エギ5モデル。メーカー公表スペックを同じ基準で比較し、違いが分かるよう整理しました。</p></div></section>
-<section class="section compare-verified" aria-labelledby="egis-compare-title">
-<div class="section__head"><div><span class="kicker">SPECIFICATION / 3.5 GO</span><h2 id="egis-compare-title">3.5号エギ<br>5モデル比較</h2></div><p>YAMASHITA・SHIMANO・DAIWAのメーカー公式情報を照合。<strong>重量と沈下速度</strong>を揃えて比較できます。</p></div>
-<div class="compare-verified__intro"><p>公開情報の確認日：2026年10月13日。<strong>メーカー公称値</strong>であり実測結果・釣果ランキングではありません。風・潮流・ライン・姿勢によって実際の沈み方は異なります。</p></div>
-<div class="verified-egi-grid">
-<?php foreach($verifiedEgis as $slug=>$egi): ?>
-<article class="verified-egi-card">
-  <a class="verified-egi-card__main" href="/gear-compare-item.php?model=<?=rawurlencode($slug)?>" aria-label="<?=gh($egi['brand'].' '.$egi['name'])?>の商品比較詳細を表示">
-    <span class="verified-egi-card__brand"><?=gh($egi['brand'])?></span>
-    <span class="verified-egi-card__category"><?=gh($egi['type'])?></span>
-    <h3><?=gh($egi['name'])?></h3>
-    <p><?=gh($egi['use'])?></p>
-    <dl class="verified-egi-card__numbers"><div><dt>重量</dt><dd><?=gh(rtrim(rtrim(sprintf('%.2f',$egi['weight']),'0'),'.'))?> <small>g</small></dd></div><div><dt>沈下速度</dt><dd><?=gh($egi['sink'])?> <small>秒/m</small></dd></div></dl>
-    <div class="verified-egi-card__meter"><span>沈下にかかる時間（1mあたり）</span><div class="verified-egi-card__track"><span style="width:<?=min(100,max(1,($egi['sink']/8)*100))?>%"></span></div></div>
-    <span class="verified-egi-card__details">詳しい適合条件を見る <span aria-hidden="true">→</span></span>
-  </a>
-  <a class="verified-egi-card__source" href="<?=gh($egi['source'])?>" target="_blank" rel="noopener noreferrer">メーカー公式スペック ↗</a>
-</article>
-<?php endforeach;?>
-</div>
-<div class="verified-comparison-scroll" role="region" aria-label="3.5号エギの横並び比較表" tabindex="0">
-<table class="verified-comparison-table"><caption>5モデルのスペック一覧（全て3.5号）</caption><thead><tr><th scope="col">モデル</th><th scope="col">重量</th><th scope="col">沈下速度</th><th scope="col">タイプ</th><th scope="col">詳細</th></tr></thead><tbody>
-<?php foreach($verifiedEgis as $slug=>$egi):?><tr><th scope="row"><?=gh($egi['brand'].' '.$egi['name'])?></th><td><?=gh(rtrim(rtrim(sprintf('%.2f',$egi['weight']),'0'),'.'))?> g</td><td><?=gh($egi['sink'])?> 秒/m</td><td><?=gh($egi['type'])?></td><td><a href="/gear-compare-item.php?model=<?=rawurlencode($slug)?>">詳細 →</a></td></tr><?php endforeach;?>
-</tbody></table></div>
-<p class="verified-comparison-note">沈下速度は「秒/m」の数値が<strong>大きいほどゆっくり沈む</strong>ことを示します。商品写真は転載許諾を確認できたものから追加します。製品ごとの画像はまだ掲載していません。</p>
+<main id="main" class="egl-page">
+<section class="egl-detail-hero">
+ <div class="egl-container">
+  <nav class="egl-breadcrumbs" aria-label="パンくず"><a href="/">トップ</a><span>›</span><span>エギを比較</span></nav>
+  <span class="egl-kicker">SPEC COMPARISON / 3.5 GO</span>
+  <h1>3.5号エギを、<br>条件で比べる。</h1>
+  <p class="egl-lead">浅場・堤防・潮の速い場所。近い釣り場を選ぶと、確認済みの5モデルから3モデルを並べて比較できます。</p>
+ </div>
 </section>
-<section class="section"><div class="section__head"><div><span class="kicker">PRODUCT GALLERY / CMS</span><h2>商品写真・<br>追加ギア</h2></div><p>掲載を確認できた商品写真と追加情報を表示します。写真・商品名は個別ページにリンクします。</p></div>
-<?php if($unavailable || !$items):?>
-<p role="status"><?= $unavailable?'商品データを更新中です。':'比較対象の商品を準備中です。' ?> 以下は製品型番とは無関係の実物参考写真です。</p>
-<div class="gear-compare-photo-guides">
-<figure class="gear-reference-photo"><img src="https://upload.wikimedia.org/wikipedia/commons/4/48/Egi.jpg" loading="lazy" decoding="async" alt="カスタマイズされたエギの実物参考写真。特定の販売商品ではありません。"><figcaption><strong>エギの形を写真で見る</strong><span>ボディ・シンカー・カンナを確認。機種別の写真ではありません。</span><small><a href="https://commons.wikimedia.org/wiki/File:Egi.jpg" target="_blank" rel="noopener noreferrer">Rickygap / Wikimedia Commons</a> ・ <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 3.0</a>（無加工）</small></figcaption></figure>
-<figure class="gear-reference-photo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/A_spinning_reel_on_a_rod.jpg/500px-A_spinning_reel_on_a_rod.jpg" loading="lazy" decoding="async" alt="竿に付いたスピニングリールの実物参考写真。特定の販売商品ではありません。"><figcaption><strong>ロッド・リールを写真で見る</strong><span>スプールとリールフットなど、基本構造を確認できます。</span><small><a href="https://commons.wikimedia.org/wiki/File:A_spinning_reel_on_a_rod.jpg" target="_blank" rel="noopener noreferrer">JaredMcKenzie / Wikimedia Commons</a> ・ <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noopener noreferrer">CC0</a></small></figcaption></figure>
-</div><p style="margin-top:32px"><a class="cta cta--primary" href="/gear.php">ギアの選び方へ →</a></p>
-<?php else:?>
-<div class="gear-gallery">
-<?php foreach($items as $item):$photo=gear_photo($item); ?>
-<article class="gear-tile">
-<a class="gear-tile__link" href="/gear-item.php?slug=<?=rawurlencode($item['slug'])?>">
-<div class="gear-tile__photo"><?php if($photo):?><img src="<?=gh($photo)?>" alt="<?=gh($item['brand'].' '.$item['name'])?>の商品写真" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.hidden=true;this.parentElement.classList.add('gear-tile__missing')"><?php else:?><span>商品写真を確認中</span><?php endif;?></div>
-<div class="gear-tile__body"><span class="kicker"><?=gh($types[$item['type']]??$item['type'])?></span><h3><?=gh($item['brand'].' '.$item['name'])?></h3><p><?=gh($item['summary']??'')?></p><dl><?php if($item['weight_g']!==null):?><div><dt>自重</dt><dd><?=gh($item['weight_g'])?> g</dd></div><?php endif;?><?php if($item['sink_sec_per_m']!==null):?><div><dt>沈下速度</dt><dd><?=gh($item['sink_sec_per_m'])?> 秒/m</dd></div><?php endif;?><?php if($item['price_yen']!==null):?><div><dt>参考価格</dt><dd>¥<?=number_format((int)$item['price_yen'])?></dd></div><?php endif;?></dl><span class="gear-tile__more">詳細・適合条件を見る →</span></div>
-</a></article>
-<?php endforeach;?></div>
-<?php endif;?></section></main>
-<?php require __DIR__.'/partials/footer.php';?>
+<section class="egl-section">
+ <div class="egl-container">
+  <div class="egl-heading"><div><span class="egl-kicker">01 / FIELD CONDITIONS</span><h2>釣り場の条件を変更</h2></div><p>選び直しても、比較したいモデルの情報はメーカー公表値で統一しています。</p></div>
+  <div class="egl-scenes">
+   <?php foreach(['shallow','standard','current'] as $key):$s=$scenes[$key];?>
+   <a class="egl-scene<?=$selected===$key?' is-selected':''?>" href="/compare.php?scene=<?=egl_h($key)?>" <?=$selected===$key?'aria-current="page"':''?>>
+     <span><b><?=egl_h($s['label'])?></b><small><?=egl_h($s['detail'])?></small></span><span class="egl-scene__arrow" aria-hidden="true">↗</span>
+   </a><?php endforeach;?>
+  </div>
+  <p class="egl-note"><a href="/compare.php" style="color:var(--egl-mint);text-decoration:underline">全5モデルを表示する →</a></p>
+ </div>
+</section>
+<section class="egl-section egl-section--tight">
+ <div class="egl-container">
+  <div class="egl-heading"><div><span class="egl-kicker">02 / <?=count($current['slugs'])?> MODELS</span><h2><?=egl_h($current['label'])?>の比較候補</h2></div><p><?=egl_h($current['detail'])?></p></div>
+  <div class="egl-explain"><strong>選び方の目安</strong>：<?=egl_h($current['reason'])?><span class="egl-explain__notice"><?=egl_h($current['note'])?></span></div>
+  <div class="egl-products">
+  <?php foreach($current['slugs'] as $slug):$model=$models[$slug];require __DIR__.'/partials/egi-card.php';endforeach;?>
+  </div>
+  <p class="egl-note">掲載順は「売れ筋」や「釣れる順位」ではありません。モデルの重量・沈下速度と設計上の違いを確認してください。実際の沈み方は潮流・ライン等で変化します。</p>
+ </div>
+</section>
+<section class="egl-section">
+ <div class="egl-container">
+  <div class="egl-heading"><div><span class="egl-kicker">03 / SPEC TABLE</span><h2>数値を横並びで比較</h2></div><p>すべて3.5号。沈下速度は参考値で、秒数が長いほどゆっくり沈む目安です。</p></div>
+  <div class="egl-spec-table-wrap" role="region" aria-label="3.5号エギ重量沈下速度一覧" tabindex="0">
+   <table class="egl-spec-table">
+    <caption>公称スペックの一覧（掲載5モデル）</caption>
+    <thead><tr><th scope="col">モデル</th><th scope="col">重量</th><th scope="col">沈下速度</th><th scope="col">タイプ</th><th scope="col">詳細</th></tr></thead>
+    <tbody><?php foreach($models as $slug=>$model):?><tr><th scope="row"><?=egl_h($model['brand'].' '.$model['name'])?></th><td><?=egl_h($model['weight'])?>g</td><td>約<?=egl_h($model['sink'])?>秒/m</td><td><?=egl_h($model['type'])?></td><td><a href="/gear-compare-item.php?model=<?=rawurlencode($slug)?>">詳細 →</a></td></tr><?php endforeach;?></tbody>
+   </table>
+  </div>
+  <p class="egl-note">出典：<a href="https://www.yamaria.co.jp/yamashita/product/detail/522" target="_blank" rel="noopener noreferrer" style="text-decoration:underline;color:var(--egl-mint)">YAMASHITA</a>、<a href="https://fish.shimano.com/ja-JP/product/lure/shoreeging/egi/a155f00000c5d08qaf.html" target="_blank" rel="noopener noreferrer" style="text-decoration:underline;color:var(--egl-mint)">SHIMANO</a>、<a href="https://www.daiwa.com/jp/product/2023/11/06/01/32/thtjj6t" target="_blank" rel="noopener noreferrer" style="text-decoration:underline;color:var(--egl-mint)">DAIWA</a>の製品情報（2026年10月14日確認）。メーカーによって測定条件が異なる場合があります。</p>
+ </div>
+</section>
+<section class="egl-section egl-section--tight"><div class="egl-container"><div class="egl-banner"><div><h2>沈下速度の違いが気になる？</h2><p>浅場・標準タイプの選び分けや、購入前の注意点を説明します。</p></div><a class="egl-btn egl-btn--primary" href="/guide.php">選び方ガイド →</a></div></div></section>
+</main>
+<?php require __DIR__.'/partials/footer.php';

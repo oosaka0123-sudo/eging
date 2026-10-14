@@ -1,1 +1,17 @@
-<?php $pageTitle='CONCEPT｜エギングギアラボ';$pageDescription='エギングギアラボの考え方、編集方針、広告ポリシー。';require __DIR__.'/partials/header.php';?><main id="main"><section class="page-hero"><img class="page-art" src="/assets/visuals/gear-orbit.svg" alt=""><div><span class="kicker">CONCEPT / 01</span><h1>勘から、<br>設計へ。</h1><p>道具選びは、人気順より先に条件を読む。エギングギアラボは、海の条件とギアのスペックをつなぐためのメディアです。</p></div></section><section class="section"><div class="article-shell"><article class="prose"><h2>なぜ、条件から始めるのか</h2><p>同じエギでも、浅場と深場、無風と横風、秋の新子と春の大型では必要な性能が変わります。だからこのサイトでは、商品名より先に「今の条件では何が必要か」を定義します。</p><h2 id="policy">編集・広告ポリシー</h2><p>アフィリエイトリンクを含む記事でも、報酬額で順位を変更しません。選定基準は記事内で公開し、向かない条件も併記します。実釣していないものを実釣レビューとして扱いません。</p><h2>データの扱い</h2><p>スペックはメーカー公式値を優先し、確認日と出典を保持する設計です。沈下速度や重量など、モデル差が大きい値は「一般論」に丸めず製品単位で扱います。</p></article><aside class="side-note">DESIGN PRINCIPLE<br><br>Dark ocean<br>Measured light<br>Reasoned choice<br><br>「水中の美しさ」と「計測機器の精密さ」を同じ画面に置く。</aside></div></section></main><?php require __DIR__.'/partials/footer.php';?>
+<?php
+$pageTitle='編集・広告ポリシー｜エギングギアラボ';
+$pageDescription='エギングギアラボの比較基準、メーカー公表値の確認、写真の使用ルール、広告・アフィリエイトの掲載方針。';
+require __DIR__.'/partials/header.php';
+?>
+<main id="main" class="egl-page">
+<section class="egl-detail-hero"><div class="egl-container"><nav class="egl-breadcrumbs" aria-label="パンくず"><a href="/">トップ</a><span>›</span><span>編集・広告ポリシー</span></nav><span class="egl-kicker">ABOUT / EDITORIAL POLICY</span><h1>比べる理由を、<br>公開する。</h1><p class="egl-lead">広告の多さではなく、釣り場の条件と確認できた製品スペックで比較します。</p></div></section>
+<section class="egl-section" id="policy"><div class="egl-container egl-editorial">
+<h2>サイトの目的</h2><p>エギングギアラボは、釣り場の条件からエギを選ぶ判断を助ける専門メディアです。まず3.5号エギ5モデルを比べることから始め、確認済みの情報だけを掲載します。</p>
+<h2>比較基準と出典</h2><p>メーカー公表の号数・重量・沈下速度を原則として採用します。スペックの確認日と製品の公式ページを示します。条件別の並びは売上や釣果順位ではありません。実釣していないものを「実釣レビュー」や「実測」と表記しません。</p>
+<h2>商品写真の取り扱い</h2><p>メーカーや販売先に写真が存在しても、第三者サイトで転載できるとは限りません。権利・利用規約の確認が取れた写真だけを商品写真として掲載します。未確認の商品には型番のみの枠を表示します。</p>
+<h2>広告・アフィリエイト表記</h2><p>提携済みの購入先リンクを掲載する場合は「PR」など広告であることが分かる表示を付けます。掲載順位は広告報酬で変更しません。価格・最安値・在庫を検証せず表示しません。</p>
+<h2>データの更新</h2><p>メーカーの改訂で仕様が変わる場合があります。数値は定期的に見直します。モデル間で沈下速度の試験条件が異なる可能性があり、公称値だけで釣果・適合を断定しません。</p>
+</div></section>
+<section class="egl-section egl-section--tight"><div class="egl-container"><a href="/compare.php" class="egl-btn egl-btn--primary">比較ページに戻る →</a></div></section>
+</main>
+<?php require __DIR__.'/partials/footer.php';
