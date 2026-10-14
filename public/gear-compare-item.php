@@ -15,6 +15,7 @@ require __DIR__.'/partials/header.php';
 <?php else:
 $photo=egl_photo($model);
 $purchase=egl_purchase($model);
+$yahooSearch='https://shopping.yahoo.co.jp/search?p='.rawurlencode($model['brand'].' '.$model['name'].' '.$model['size']);
 ?>
 <section class="egl-detail-hero">
  <div class="egl-container">
@@ -42,10 +43,11 @@ $purchase=egl_purchase($model);
    </div>
    <div class="egl-detail-actions">
     <?php if($purchase):?><a class="egl-btn egl-btn--primary" href="<?=egl_h($purchase)?>" target="_blank" rel="nofollow sponsored noopener noreferrer">Yahoo!ショッピングで見る（PR） ↗</a>
-    <?php else:?><a class="egl-btn egl-btn--primary" href="<?=egl_h($model['source'])?>" target="_blank" rel="noopener noreferrer">メーカー公式ページで製品を確認 ↗</a><?php endif;?>
+    <?php else:?><a class="egl-btn egl-btn--primary" href="<?=egl_h($model['source'])?>" target="_blank" rel="noopener noreferrer">メーカー公式ページで写真・仕様を見る ↗</a>
+    <a class="egl-btn egl-btn--quiet" href="<?=egl_h($yahooSearch)?>" target="_blank" rel="noopener noreferrer nofollow">Yahoo!で型番を検索する ↗</a><?php endif;?>
     <a class="egl-btn egl-btn--quiet" href="/compare.php">← 他のエギと比較</a>
    </div>
-   <?php if(!$purchase):?><p class="egl-note">※ 当サイト経由の購入先リンクは現在掲載していません。Yahoo!等での販売価格・在庫はこのページでは案内していません。</p><?php endif;?>
+   <?php if(!$purchase):?><p class="egl-note">※ Yahoo!へのリンクは販売商品を探すための通常の検索リンクであり、アフィリエイトリンクではありません。検索結果には別の号数・カラー・類似商品も含まれます。販売価格・在庫はリンク先で確認してください。</p><?php endif;?>
   </div>
   <div class="egl-detail-photo">
     <?php if($photo):?><img src="<?=egl_h($photo)?>" alt="<?=egl_h($model['brand'].' '.$model['name'])?>の製品写真">
