@@ -1,31 +1,35 @@
-# EGING GEAR LAB — 作業引き継ぎ（2026-10-13）
+# EGING GEAR LAB — 最新引き継ぎ (2026-10-14 JST)
 
-## 本番サイトとデプロイ
+## 正本と現在のサイト構成
 
-- 正本: https://github.com/oosaka0123-sudo/eging （main）
+- Source: `oosaka0123-sudo/eging` main
 - 本番: https://eging.rss7.net/
-- **実稼働の本番デプロイ**: 別Repo `oosaka0123-sudo/rss7-ai-works` の GitHub Actions `.github/workflows/deploy-eging.yml` を `workflow_dispatch` で実行。ソースは `eging` の最新 main をcheckoutし、FTPSで `/eging` と `/eging-private` に非破壊ミラー。
-- PC03（ks-03）から `gh workflow run deploy-eging.yml -R oosaka0123-sudo/rss7-ai-works --ref main` を実行できる。Operaは使わない。
-- 2026-10-13 公開成功: https://github.com/oosaka0123-sudo/rss7-ai-works/actions/runs/38345952663
-- 2026-10-13 キャッシュ対策の再デプロイ: https://github.com/oosaka0123-sudo/rss7-ai-works/actions/runs/38346459388 （最新の実行結果を必ず確認）
+- 実デプロイ: `oosaka0123-sudo/rss7-ai-works` の `.github/workflows/deploy-eging.yml`。GitHub Actionsで`eging` mainをチェックアウトしてFTPSへ非破壊アップロード。
+- 方向性: `docs/SITE_DIRECTION_COUNCIL_2026-10-14.md` と `README.md` を読む。
+- PC03が原則primary。PC03 Remote Desktop Commanderの使用量上限に達している場合、live-confirmed PC04 (ks04)を補助利用。Operaは使わずChromeを使用。
+- 2026-10-14 core site PR #34 merged: https://github.com/oosaka0123-sudo/eging/pull/34
+- 2026-10-14 production deploy succeeded: https://github.com/oosaka0123-sudo/rss7-ai-works/actions/runs/38518537721
+- Mobile first-fold density patch PR #35: https://github.com/oosaka0123-sudo/eging/pull/35 （公開成功・実URL検証まで完了扱いにしない）
 
-## 写真ページの現在地
+## 実装と確認した証拠
 
-- `/gear.php` : Wikimedia Commonsから、許諾の明確な参考写真（エギ／ロッド＋リール）2点を表示。写真には出典・ライセンスを明示。
-- `/compare.php` : 本来は CMSの `gear_items` の公開レコードに紐づく `specs.image_url` を3列のギャラリーに表示。写真と商品名のリンク先は自サイト `/gear-item.php?slug=...`。
-- DB接続不調または公開商品なしの時は `/compare.php` に、正規に再利用できる参考写真2点と注記を表示するフォールバックを2026-10-13に追加。**この2点はメーカー製品固有の写真ではなく参考写真**。全商品の写真登録が完了したという意味ではない。
-- `public/compare.php` と `public/gear-item.php` にはロリポップ！アクセラレータの古いPHPキャッシュを防ぐ `Cache-Control: no-cache, no-store, must-revalidate, max-age=0` を追加済み。
-- 通常URLが古い場合、`/compare.php?check=20261013` のような別クエリでオリジン最新版を確認。ロリポップ公式のキャッシュ削除機能はユーザー専用ページにログインして対象ドメインの設定から実行可能。**他ドメインのキャッシュや設定には触らない**。
+- 公開入口 `/` → `/conditions.php` で「浅場」「堤防・中層」「深め・潮流」。比較 `/compare.php` は3.5号エギ5機種、`?scene=shallow` / `standard` / `current` は3機種。各モデルから `/gear-compare-item.php?model=...`。
+- 比較と各詳細は `public/_comparison_egis.php` が単一の暫定公開ソースで、MySQL認証が失敗しても動作。プライベートのCMS・DBはそのまま保全。
+- 個別商品は公称重量・沈下速度・出典・向く条件・注意点・メーカー公式へのリンクを表示。Yahooリンクは**通常の型番検索**であり未提携のアフィリエイトリンクと偽らない。
+- 商品別の製品写真は未掲載。モデル固有写真の再利用許諾が検証できるまでは型番プレースホルダー。汎用参照写真による誤認を避けた。
+- PR #34 CI PHP lint＋Playwright browser smoke＋3/5比較～5商品の詳細 E2E＋Lighthouseすべて成功。PC04 Playwright Chrome実本番確認 390px/1440pxで /、/compare.php、/gear-compare-item.php は HTTP 200／JS page errors 0／horizontal overflow 0。※PR #35後は再確認が必要。
+- Live `/sitemap.xml` HTTP 200。DB 1045は解決していないが、CMS項目のみスキップしてXMLを提供。
 
-## 最重要の未解決課題
+## 未完了 / ブロッカー
 
-1. **MySQL認証エラー**: `Configure Eging Runtime` の過去の診断結果は MySQL `1045` (`HY000`)。対象はロリポップ MySQL 8.4の `LA03517425-net`。DB名、ホスト名、ユーザー名は管理画面とEnvironment変数で照合済み。
-2. GitHub ActionsのDBパスワード Secret `EGING_DB_PASSWORD` は `rss7-ai-works` Repoの `production` 環境に存在するが、2026-10-13昼時点で更新タイムスタンプが2026-10-12 00:16:49Zのまま。実際にロリポップ側と一致しているか確認できていない。ユーザーが設定成功と述べた際も更新が反映された証拠は得られなかった。
-3. **機密値をチャット・Issue・Actionsログ・公開ファイルへ書かない**。共有DBのパスワード自体を安易に変更しない。認証画面経由の自動Secret転送は安全性チェックによりブロックされたことがあり、許可されない経路での回避はしない。
-4. Secretを正しく登録後、`rss7-ai-works` の `Configure Eging Runtime` を再実行 → DB正常接続確認 → 本番 `/admin/install.php`（管理者認証付き、既存データを壊さない事前確認）でDBスキーマ整備 → 商品登録の順。
-5. メーカー固有の実物写真は、メーカー公式情報の**存在確認**とサイトへの**転載・埋込み許諾**は別。適切なメーカー素材利用許諾か提携アフィリエイト規約に基づく画像だけ `specs.image_url` に登録する。未許可の画像を転載しない。写真の出典を `specs.image_source` に記録し、最新メーカー公称スペックは一次ソースで照合する。
+1. **商品固有の実物写真**: 権利／契約条件未確認。Yahoo!アフィリエイト写真は利用規約上、アフィリエイトリンクと一緒に表示する条件等があるため、提携後に正確な商品画像を取得する。
+2. **Yahooアフィリエイト収益化**: 発行済み正規の提携商品URLはまだ登録されていない。現在の通常検索リンクはアフィリエイトではない。
+3. **MySQL接続**: ロリポップ MySQLユーザー認証エラー SQLSTATE 1045。対象DB名・ホスト・ユーザー名は以前ロリポップ画面とGitHub varsで照合済み。Secretの現行値一致は未確認。既存共有DBパスワードやIAMは無承認変更しない。
+4. **CMSからの新規商品登録・7条件動的診断**: DB接続の復旧＋E2E検証が必須。比較画面を二重化しない。
+5. **PR #35**: CSS・UI密度の改善とキャッシュbusterの変更。CI / Merge / Deploy / Live screenshotが通ったら完了判定。
 
-## 完了条件
+## Next
 
-- GitHubのCI成功、Deploy成功、実ページHTTP 200・見た目・写真URL読込、DB正常接続とCMS公開レコード、商品固有写真の権利確認、比較写真・商品名→自サイト詳細ページの導線を本番実測。
-- コードをGitHubへ保存しただけで「完成」と言わない。
+- PR #35 の CI PHP・browser・Lighthouse成功確認 → merge → central broker FTPS deploy → PC04でHTTPS通常URLの確認・390/1440スクリーンショットを再検証。
+- 商品のライセンス・正式な提携リンクをユーザー側の登録済みパートナー経路から、安全に確認して商品ごとに追加する（Secretやログイン情報を公開しない）。
+- DB authは共有サーバーの影響を調べたうえで別タスクとして回復させる。
