@@ -5,6 +5,7 @@ function setOpen(open){
  if(!menu||!btn)return;
  menu.classList.toggle('open',open);
  menu.setAttribute('aria-hidden',String(!open));
+ menu.inert=!open;
  btn.setAttribute('aria-expanded',String(open));
  btn.setAttribute('aria-label',open?'メニューを閉じる':'メニューを開く');
  body.classList.toggle('egl-menu-open',open);
