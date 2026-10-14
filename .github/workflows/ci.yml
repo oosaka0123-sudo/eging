@@ -59,3 +59,6 @@ jobs:
 
       - name: Browser smoke test
         run: node .github/scripts/browser-smoke.mjs
+
+      - name: Condition to comparison to detail journey
+        run: node .github/scripts/condition-journey.mjs
