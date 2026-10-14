@@ -1,11 +1,62 @@
-<?php $pageTitle='エギングギアラボ｜条件から選ぶ、エギングギア。';$pageDescription='季節・潮・風・水深・地形から、最適なエギ・ロッド・リールを逆引きするエギングギア専門メディア。';require __DIR__.'/partials/header.php';?>
-<div class="opening" id="opening" role="dialog" aria-label="サイトイントロ"><video class="opening__video" autoplay muted playsinline loop poster="/assets/visuals/hero-depth.svg"><source src="/assets/video/opening.mp4" type="video/mp4"></video><div class="opening__inner"><div class="opening__scan" aria-hidden="true"><span>WIND</span><span>DEPTH</span><span>CURRENT</span></div><p class="opening__title">EGING GEAR LAB</p><p>READ THE WATER / CHOOSE THE GEAR</p><button data-skip type="button">ENTER</button></div></div>
-<main id="main">
-<section class="hero"><div class="hero__visual"><img src="/assets/visuals/hero-depth.svg" alt=""></div><div class="hero__content"><p class="eyebrow">Condition driven tackle selection</p><h1 class="display">条件から<br><span class="stroke">選ぶ。</span></h1><div class="hero__sub"><p>季節、風、潮、水深、地形。先に海の条件を読む。そこからエギ、ロッド、ラインを逆算する。おすすめ順ではなく、理由から道具を選ぶためのエギングギア専門メディアです。</p><div class="hero__actions"><a class="cta cta--primary" href="#condition">条件から診断</a><a class="cta" href="/gear.php">ギアを探す</a></div></div></div></section>
-<div class="marquee"><div class="marquee__track"><span>SEASON</span><span>WIND</span><span>TIDE</span><span>DEPTH</span><span>FIELD</span><span>SIZE</span><span>TIME</span><span>SEASON</span><span>WIND</span><span>TIDE</span><span>DEPTH</span><span>FIELD</span><span>SIZE</span><span>TIME</span></div></div>
-<section class="section" id="condition"><div class="condition-stage"><div class="condition-copy reveal"><div><span class="kicker">01 / CONDITION SELECTOR</span><h3>海から、<br>道具を決める。</h3></div><p>先に商品名を決めません。条件を入力すると、必要なスペックの範囲と理由を返します。CMSに登録したルールが、そのまま診断ロジックになります。</p></div><div class="condition-ui reveal"><form id="quickCondition"><div class="field-row"><label for="season">Season</label><select id="season" name="season"><option value="spring">春 / 大型</option><option value="autumn">秋 / 数釣り</option></select></div><div class="field-row"><label for="field">Field</label><select id="field" name="field"><option value="port">堤防・漁港</option><option value="rock">磯</option><option value="surf">サーフ</option></select></div><div class="field-row"><label for="depth">Depth</label><select id="depth" name="depth"><option value="shallow">浅場</option><option value="mid">中層</option><option value="deep">深場</option></select></div><div class="field-row"><label for="wind">Wind</label><select id="wind" name="wind"><option value="low">弱い</option><option value="mid">普通</option><option value="strong">強い</option></select></div><div class="field-row"><label for="tide">Tide</label><select id="tide" name="tide"><option value="rising">上げ</option><option value="falling">下げ</option><option value="slack">潮止まり</option></select></div><div class="field-row"><label for="target_size">Target</label><select id="target_size" name="target_size"><option value="small">小型</option><option value="medium">中型</option><option value="large">大型</option></select></div><div class="field-row"><label for="time_of_day">Time</label><select id="time_of_day" name="time_of_day"><option value="dawn">朝まずめ</option><option value="day">日中</option><option value="dusk">夕まずめ</option><option value="night">夜</option></select></div><button class="cta cta--primary" type="submit">診断する</button><div class="result-panel" id="quickResult" aria-live="polite">条件を選ぶと、推奨レンジと理由を表示します。</div></form></div></div></section>
-<section class="section"><div class="section__head reveal"><div><span class="kicker">02 / HOW WE THINK</span><h2>比較より先に、<br>判断基準を。</h2></div><p>このサイトは「人気だから1位」では終わりません。海況と狙いに対して、どのスペックが必要なのかを先に定義します。</p></div><div class="editorial-grid"><article class="editorial-card reveal"><span class="num">01</span><h3>CONDITION</h3><p>季節・水深・風・潮・対象サイズ・時間帯・フィールドを読む。</p><div class="visual"></div></article><article class="editorial-card reveal"><span class="num">02</span><h3>SPEC</h3><p>必要な号数、硬さ、長さ、PE号数へ変換する。</p><div class="visual"></div></article><article class="editorial-card reveal"><span class="num">03</span><h3>GEAR</h3><p>最後に、条件を満たす実在ギアだけを比較する。</p><div class="visual"></div></article></div></section>
-<section class="section section--tight"><div class="stat-band reveal"><div class="stat"><b>7</b><span>Core conditions</span></div><div class="stat"><b>8+</b><span>Gear categories</span></div><div class="stat"><b>1</b><span>Shared data source</span></div><div class="stat"><b>0</b><span>Fake field tests</span></div></div></section>
-<section class="section"><div class="section__head reveal"><div><span class="kicker">03 / GEAR SYSTEM</span><h2>道具は、<br>単体で選ばない。</h2></div><p>エギ、ロッド、リール、ラインは相互に影響します。単品ランキングではなく、セットとして整合するかを見ます。</p></div><div class="product-rail"><article class="product-card reveal"><div><span class="tag">EGI</span><div class="ghost-gear"><img src="/assets/visuals/gear-orbit.svg" alt="エギ・ロッド・リール・ラインの関係図"></div></div><div><h3>エギ</h3><p>号数、沈下速度、タイプ、姿勢、光量条件から絞り込む。</p><a class="cta" href="/gear.php#egi">見る</a></div></article><article class="product-card reveal"><div><span class="tag">ROD</span><div class="ghost-gear"><img src="/assets/visuals/conditions-map.svg" alt="条件マップ"></div></div><div><h3>ロッド</h3><p>長さとパワーを、飛距離と操作性のトレードオフから選ぶ。</p><a class="cta" href="/gear.php#rod">見る</a></div></article><article class="product-card reveal"><div><span class="tag">SYSTEM</span><div class="ghost-gear"><img src="/assets/visuals/hero-depth.svg" alt="深海の抽象ビジュアル"></div></div><div><h3>一式</h3><p>バランスの取れた一式として、予算と条件で組み合わせる。</p><a class="cta" href="/compare.php">比較する</a></div></article></div></section>
-<section class="section"><div class="section__head reveal"><div><span class="kicker">04 / EDITORIAL POLICY</span><h2>売るために、<br>順位を変えない。</h2></div><p>広告報酬と順位は分離します。向かない条件、買わなくていいケース、中古で十分なケースも書きます。</p></div><a class="cta" href="/concept.php#policy">編集方針を見る</a></section>
-</main><?php require __DIR__.'/partials/footer.php';?>
+<?php
+require __DIR__.'/partials/egi-functions.php';
+$pageTitle='エギングギアラボ｜釣り場の条件からエギを比べて選ぶ';
+$pageDescription='浅場・堤防・深めの釣り場条件から、3.5号エギをメーカー公表の重量・沈下速度で比較。5モデルの違いと選ぶ理由が分かる。';
+$models=egl_egis();
+$scenes=egl_scenes();
+require __DIR__.'/partials/header.php';
+?>
+<main id="main" class="egl-page">
+<section class="egl-hero">
+ <div class="egl-container egl-hero__grid">
+  <div>
+   <span class="egl-kicker">EGING GEAR LAB / CONDITIONS FIRST</span>
+   <h1>釣り場に合うエギを、<br><em>比べて選ぶ。</em></h1>
+   <p class="egl-lead">浅場か、堤防か、潮が速い場所か。<br>条件を選ぶと、3.5号エギの候補を3モデルまで絞り、重さ・沈下速度・違いを比較できます。</p>
+   <div class="egl-hero__actions"><a class="egl-btn egl-btn--primary" href="#choose">釣り場の条件を選ぶ ↓</a><a class="egl-btn egl-btn--quiet" href="/compare.php">5モデルを全部比較 →</a></div>
+  </div>
+  <aside class="egl-hero__aside" aria-label="沈下速度の違いの例">
+   <span class="egl-hero__aside-title">沈下速度が違えば、選び方も変わる。</span>
+   <div class="egl-example"><b>ベーシック</b><div class="egl-example__bar"><span style="width:37.5%"></span></div><strong>約3秒/m</strong></div>
+   <div class="egl-example"><b>シャロー</b><div class="egl-example__bar"><span style="width:75%"></span></div><strong>約6秒/m</strong></div>
+   <div class="egl-example"><b>スーパーシャロー</b><div class="egl-example__bar"><span style="width:100%"></span></div><strong>約8秒/m</strong></div>
+   <small class="egl-hero__aside-note">エギ王 K 3.5号のメーカー公表値。数値が大きいほど、1m沈むまでの時間が長くなります。<a href="https://www.yamaria.co.jp/yamashita/product/detail/523" target="_blank" rel="noopener noreferrer" style="text-decoration:underline">公称値の出典 ↗</a></small>
+  </aside>
+ </div>
+</section>
+<section class="egl-section" id="choose">
+ <div class="egl-container">
+  <div class="egl-heading"><div><span class="egl-kicker">01 / CHOOSE YOUR FIELD</span><h2>どこで釣りますか？</h2></div><p>難しい診断は不要。まずは近い条件をひとつ選んでください。</p></div>
+  <div class="egl-scenes">
+  <?php foreach(['shallow','standard','current'] as $key):$scene=$scenes[$key];?>
+   <a class="egl-scene" href="/compare.php?scene=<?=egl_h($key)?>">
+    <span><b><?=egl_h($scene['label'])?></b><small><?=egl_h($scene['detail'])?></small></span><span class="egl-scene__arrow" aria-hidden="true">↗</span>
+   </a>
+  <?php endforeach;?>
+  </div>
+  <p class="egl-note">※ 条件別の候補は、現在公開している3.5号5機種の中での比較です。深場などで適合機種が不足する場合は、その旨を明記しています。</p>
+ </div>
+</section>
+<section class="egl-section egl-section--tight">
+ <div class="egl-container">
+  <div class="egl-heading"><div><span class="egl-kicker">02 / COMPARE</span><h2>まずは定番タイプの3モデル</h2></div><p>同じ3.5号でも、メーカーや構造によって違いがあります。商品名から詳細へ進めます。</p></div>
+  <div class="egl-products">
+  <?php foreach($scenes['standard']['slugs'] as $slug):$model=$models[$slug];require __DIR__.'/partials/egi-card.php';endforeach;?>
+  </div>
+  <div class="egl-inline-links"><a class="egl-btn egl-btn--primary" href="/compare.php">5モデルを比較する →</a></div>
+ </div>
+</section>
+<section class="egl-section">
+ <div class="egl-container">
+  <div class="egl-heading"><div><span class="egl-kicker">03 / HOW IT WORKS</span><h2>3ステップで、選ぶ。</h2></div></div>
+  <div class="egl-guides">
+   <article class="egl-guide"><span class="egl-kicker">STEP 01</span><h3>釣り場の条件を選択</h3><p>浅場・堤防・深めから、釣り場に一番近い条件を選びます。</p></article>
+   <article class="egl-guide"><span class="egl-kicker">STEP 02</span><h3>重量と沈下速度を比較</h3><p>メーカーが公開する数値と、向く条件・注意点を並べて判断します。</p></article>
+   <article class="egl-guide"><span class="egl-kicker">STEP 03</span><h3>詳細と公式情報で確認</h3><p>製品ごとの違いを確認。購入先は正規提携リンクが整備された商品だけ表示します。</p></article>
+  </div>
+  <p class="egl-note">当サイトは実釣試験を行ったとの表示はしていません。広告報酬を理由に掲載順を変更しません。<a href="/concept.php" style="text-decoration:underline;color:var(--egl-mint)">編集方針を読む →</a></p>
+ </div>
+</section>
+<section class="egl-section egl-section--tight"><div class="egl-container"><div class="egl-banner"><div><h2>重量と沈下速度の見方から知りたい方へ</h2><p>数値の読み方、シャローとベーシックの違いを図解的に説明しています。</p></div><a class="egl-btn egl-btn--primary" href="/guide.php">選び方ガイド →</a></div></div></section>
+</main>
+<?php require __DIR__.'/partials/footer.php';
