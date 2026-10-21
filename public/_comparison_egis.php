@@ -1,5 +1,5 @@
 <?php
-// Manufacturer-listed 3.5-go Egi specifications, verified 2026-10-13.
+// Manufacturer-listed 3.5-go Egi specifications, verified 2026-10-21.
 // Editorial comparison only. No product photography is reused without a license.
 return [
   'yamashita-k-basic' => [

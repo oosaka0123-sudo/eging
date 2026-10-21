@@ -18,11 +18,11 @@ $detailHref='/gear-compare-item.php?model='.rawurlencode((string)$slug);
     </div>
     <div class="egl-product__visual">
       <?php if($cardPhoto):?><img src="<?=egl_h($cardPhoto)?>" alt="<?=egl_h($model['brand'].' '.$model['name'])?>の製品写真" loading="lazy" decoding="async">
-      <?php else:?><span class="egl-product__visual-mark" aria-hidden="true">3.5</span><span class="egl-product__visual-label">製品写真は権利確認中<br>画像での製品比較は未対応</span><?php endif;?>
+      <?php else:?><span class="egl-product__visual-mark" aria-hidden="true">3.5</span><span class="egl-product__visual-label">商品写真は公式サイトで確認<br>写真の転載許諾は確認中</span><?php endif;?>
     </div>
   </a>
   <div class="egl-product__footer">
     <span>メーカー公表の参考値</span>
-    <a href="<?=egl_h($model['source'])?>" target="_blank" rel="noopener noreferrer">メーカー公式情報 ↗</a>
+    <a href="<?=egl_h($model['source'])?>" target="_blank" rel="noopener noreferrer">メーカー公式の製品写真を見る ↗</a>
   </div>
 </article>

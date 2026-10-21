@@ -39,7 +39,7 @@ $yahooSearch='https://shopping.yahoo.co.jp/search?p='.rawurlencode($model['brand
      <div><dt>重量</dt><dd><?=egl_h($model['weight'])?>g</dd></div>
      <div><dt>沈下速度</dt><dd>約<?=egl_h($model['sink'])?>秒/m</dd></div>
     </dl>
-    <p class="egl-note">メーカーの掲載値／2026年10月14日確認。実釣の測定値や釣果予測ではありません。</p>
+    <p class="egl-note">メーカーの掲載値／2026年10月21日再確認。実釣の測定値や釣果予測ではありません。</p>
    </div>
    <div class="egl-detail-actions">
     <?php if($purchase):?><a class="egl-btn egl-btn--primary" href="<?=egl_h($purchase)?>" target="_blank" rel="nofollow sponsored noopener noreferrer">Yahoo!ショッピングで見る（PR） ↗</a>
