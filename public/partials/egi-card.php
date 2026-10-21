@@ -23,6 +23,6 @@ $detailHref='/gear-compare-item.php?model='.rawurlencode((string)$slug);
   </a>
   <div class="egl-product__footer">
     <span>メーカー公表の参考値</span>
-    <a href="<?=egl_h($model['source'])?>" target="_blank" rel="noopener noreferrer">メーカー公式の実物写真を見る ↗</a>
+    <a href="<?=egl_h($model['source'])?>" target="_blank" rel="noopener noreferrer">メーカー公式の製品写真を見る ↗</a>
   </div>
 </article>
