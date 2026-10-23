@@ -23,7 +23,7 @@ require __DIR__.'/partials/header.php';
 <p class="egl-note">出典：<a href="https://www.yamaria.co.jp/yamashita/product/detail/523" target="_blank" rel="noopener noreferrer" style="text-decoration:underline;color:var(--egl-mint)">YAMASHITAの製品仕様 ↗</a>。水中の実測・保証値ではありません。</p>
 </div>
 <h2>③ 浅場と深場では必要な性能が変わる</h2>
-<p>浅場・藻場では、ゆっくり沈むシャロータイプが候補になります。一方、潮が速い場所や深場では、標準タイプでも底を取れないことがあるため、専用ディープタイプの比較も必要です。今回の比較ではディープ専用モデルは未掲載です。</p>
+<p>浅場・藻場では、ゆっくり沈むシャロータイプが候補になります。一方、潮が速い場所や深場では、標準タイプでも底を取れないことがあるため、専用ディープタイプの比較も必要です。「深め・潮流」では、約1.9秒/mのディープ専用モデルと標準タイプ2モデルを比較できます。</p>
 <h2>④ 比較するときの順番</h2>
 <ul>
 <li><strong>釣り場：</strong>浅いか、標準的か、潮が速いかを整理する。</li>

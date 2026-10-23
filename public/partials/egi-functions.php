@@ -9,8 +9,8 @@ function egl_scenes(){
  return [
   'shallow'=>['label'=>'浅場・藻場','detail'=>'水深が浅い場所で、ゆっくり落とすタイプを比較。','reason'=>'シャロー／スーパーシャローを中心に、標準タイプを比較基準として加えています。根掛かりや流れの強さによって選択は変わります。','slugs'=>['yamashita-k-super-shallow','yamashita-k-shallow','yamashita-k-basic'],'note'=>'エギ王Kベーシックは浅場向けの推奨ではなく、沈下速度を比較するための基準です。'],
   'standard'=>['label'=>'堤防・中層','detail'=>'標準的な沈下速度の3モデルを比べる。','reason'=>'比較対象の中からノーマル／ベーシック系3モデルを抽出しました。水深・潮の流れで適合性は変わります。','slugs'=>['yamashita-k-basic','shimano-clinch-flashboost','daiwa-amorous-joint'],'note'=>'沈下速度が近くても動きや操作感まで同じとは限りません。'],
-  'current'=>['label'=>'深め・潮流','detail'=>'沈下が比較的速い3モデルを比較の入口に。','reason'=>'今回の5モデルに専用ディープタイプは含まれていません。ベーシック／ノーマルから沈下速度を比較できますが、深場・速潮への適合を保証しません。','slugs'=>['yamashita-k-basic','shimano-clinch-flashboost','daiwa-amorous-joint'],'note'=>'深場・速潮ではディープ専用エギも候補です。今回の掲載モデルだけで適合製品を確定しないでください。'],
-  'all'=>['label'=>'全5モデル','detail'=>'沈下速度の違いが見える5モデル比較。','reason'=>'3.5号の5モデルをメーカー公表の重量・沈下速度で横並びにしています。実釣ランキングではありません。','slugs'=>array_keys(egl_egis()),'note'=>'沈下速度の数値が大きいほど、静水時の目安としてはゆっくり沈みます。']
+  'current'=>['label'=>'深め・潮流','detail'=>'ディープ専用と標準タイプの沈下速度を比較。','reason'=>'深場・潮流向けのディープ専用1モデルを、標準タイプ2モデルと比較します。水深・流速・タックルによって選択は変わります。','slugs'=>['shimano-clinch-deep-flashboost','yamashita-k-basic','shimano-clinch-flashboost'],'note'=>'ディープ専用は速く沈む参考値ですが、どの水深でも底が取れるとは限りません。'],
+  'all'=>['label'=>'基本5モデル','detail'=>'5つの定番タイプを重量・沈下速度で比較。','reason'=>'基本5モデルをメーカー公表の重量・沈下速度で横並びにしています。ディープ専用モデルは「深め・潮流」から追加で比較できます。','slugs'=>['yamashita-k-basic','yamashita-k-shallow','yamashita-k-super-shallow','shimano-clinch-flashboost','daiwa-amorous-joint'],'note'=>'数値が大きいほど静水時の目安としてゆっくり沈みます。深場にはディープ専用モデルも検討してください。']
  ];
 }
 function egl_photo($model){

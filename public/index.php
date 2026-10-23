@@ -12,7 +12,7 @@ require __DIR__.'/partials/header.php';
   <div>
    <span class="egl-kicker">EGING GEAR LAB / CONDITIONS FIRST</span>
    <h1>釣り場に合うエギを、<br><em>比べて選ぶ。</em></h1>
-   <p class="egl-lead">浅場か、堤防か、潮が速い場所か。<br>条件を選ぶと、3.5号エギの候補を3モデルまで絞り、重さ・沈下速度・違いを比較できます。</p>
+   <p class="egl-lead">浅場か、堤防か、潮が速い場所か。<br>条件を選ぶと、基本5モデル＋深場専用1モデルから候補を3モデルまで絞り、重さ・沈下速度・違いを比較できます。</p>
    <div class="egl-hero__actions"><a class="egl-btn egl-btn--primary" href="#choose">条件を選ぶ ↓</a><a class="egl-btn egl-btn--quiet" href="/compare.php">全5モデルを比較 →</a></div>
   </div>
   <aside class="egl-hero__aside" aria-label="沈下速度の違いの例">
@@ -34,7 +34,7 @@ require __DIR__.'/partials/header.php';
    </a>
   <?php endforeach;?>
   </div>
-  <p class="egl-note">※ 条件別の候補は、現在公開している3.5号5機種の中での比較です。深場などで適合機種が不足する場合は、その旨を明記しています。</p>
+  <p class="egl-note">※ 基本比較は3.5号5モデル。深め・潮流の条件では別途ディープ専用1モデルを加え、3モデルを比較します。釣り場への適合を保証する診断ではありません。</p>
  </div>
 </section>
 <section class="egl-section egl-section--tight">
