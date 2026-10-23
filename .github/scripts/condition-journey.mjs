@@ -12,7 +12,8 @@ const models = [
   'yamashita-k-shallow',
   'yamashita-k-super-shallow',
   'shimano-clinch-flashboost',
-  'daiwa-amorous-joint'
+  'daiwa-amorous-joint',
+  'shimano-clinch-deep-flashboost'
 ];
 const browser = await chromium.launch({ headless: true });
 try {
@@ -30,6 +31,14 @@ try {
       if (response.status() !== 200) throw Error('compare not 200 '+query);
       const count=await page.locator('article.egl-product').count();
       if (count !== expected) throw Error('compare '+query+' expected '+expected+' got '+count);
+      const tableCount=await page.locator('.egl-spec-table tbody tr').count();
+      if (tableCount!==expected) throw Error('comparison table differs from cards for '+query);
+      if (query.includes('current')) {
+        const target=page.locator('article.egl-product a[href*="shimano-clinch-deep-flashboost"]');
+        if(await target.count()!==1)throw Error('deep-water scene must include deep model');
+        if(!(await page.locator('body').innerText()).includes('1.9')) throw Error('deep-water 1.9s/m not visible');
+      }
+
       const officialLinks = page.locator('article.egl-product .egl-product__footer a');
       if (await officialLinks.count() !== expected) throw Error('missing manufacturer photo links for '+query);
       for (const official of await officialLinks.all()) {
