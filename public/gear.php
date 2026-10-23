@@ -10,7 +10,7 @@ require __DIR__.'/partials/header.php';
 <p class="egl-lead">エギ、ロッド、リール、ラインは組み合わせて使う道具です。まずはエギ3.5号の性能を比べるところから始めましょう。</p>
 </div></section>
 <section class="egl-section"><div class="egl-container">
-<div class="egl-heading"><div><span class="egl-kicker">START WITH EGI</span><h2>まずはエギの違いから</h2></div><p>現在、商品別の比較を提供しているのは3.5号エギ5モデルです。</p></div>
+<div class="egl-heading"><div><span class="egl-kicker">START WITH EGI</span><h2>まずはエギの違いから</h2></div><p>現在は3.5号エギの基本5モデルと、深場向け専用1モデルのスペックを公開しています。</p></div>
 <div class="egl-guides">
 <article class="egl-guide"><span class="egl-kicker">01 / EGI</span><h3>エギ</h3><p>号数、重量、沈下速度を比べて、釣り場の条件に合わせて絞る。</p><a href="/compare.php">5モデルを比べる →</a></article>
 <article class="egl-guide"><span class="egl-kicker">02 / ROD + REEL</span><h3>ロッド・リール</h3><p>長さ、操作性、ロッドの適合エギ重量、リールの番手などを合わせる。商品別比較は現在整備中です。</p><a href="/guide.php">選び方を学ぶ →</a></article>
