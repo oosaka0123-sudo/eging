@@ -50,4 +50,4 @@ return [
     'feature'=>'4g増量したシンカーとフラッシュブーストを備えたディープ専用モデル。品番QE-D35V。',
     'source'=>'https://fish.shimano.com/ja-JP/product/lure/shoreeging/egi/a155f00000ccfveqab.html',
   ],
-];\n
+];
