@@ -1,5 +1,5 @@
 <?php
-// Manufacturer-listed 3.5-go Egi specifications, verified 2026-10-21.
+// Manufacturer-listed 3.5-go Egi specifications, verified through 2026-10-23 (SHIMANO deep model).
 // Editorial comparison only. No product photography is reused without a license.
 return [
   'yamashita-k-basic' => [
@@ -42,4 +42,12 @@ return [
     'feature'=>'ジョイントボディが特徴のエギ。',
     'source'=>'https://www.daiwa.com/jp/product/thtjj6t',
   ],
-];
+  'shimano-clinch-deep-flashboost' => [
+    'brand'=>'SHIMANO','name'=>'セフィア クリンチ ディープ フラッシュブースト','size'=>'3.5号',
+    'weight'=>23.0,'sink'=>1.9,'type'=>'ディープ／ヘビーシンキング','group'=>'deep',
+    'use'=>'水深がある釣り場や潮流の速い場所で底を取りたいとき',
+    'reason'=>'メーカー公称の参考値は約1.9秒/m。ノーマル（約3.7秒/m）より速く沈む設計で、深場と速い潮流に対応する候補。',
+    'feature'=>'4g増量したシンカーとフラッシュブーストを備えたディープ専用モデル。品番QE-D35V。',
+    'source'=>'https://fish.shimano.com/ja-JP/product/lure/shoreeging/egi/a155f00000ccfveqab.html',
+  ],
+];\n
