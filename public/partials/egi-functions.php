@@ -14,10 +14,19 @@ function egl_scenes(){
  ];
 }
 function egl_photo($model){
+ // Never treat an arbitrary URL as proof of usage rights.
+ // Product image publication requires a reviewed source, explicit permission and safe image path.
  $url=$model['photo_url']??'';
- $permit=$model['photo_permission']??false;
- if($permit!==true||!is_string($url)||!filter_var($url,FILTER_VALIDATE_URL))return '';
- return parse_url($url,PHP_URL_SCHEME)==='https'?$url:'';
+ if(($model['photo_permission']??false)!==true || empty($model['photo_rights_source']))return '';
+ if(!is_string($url))return '';
+ if(preg_match('#^/assets/img/products/[a-z0-9-]+\\.(?:webp|jpg|jpeg|png)$#',$url)){
+  $path=realpath(__DIR__.'/../'.ltrim($url,'/'));
+  $root=realpath(__DIR__.'/../assets/img/products');
+  if($root && $path && str_starts_with($path,$root.DIRECTORY_SEPARATOR) && is_file($path))return $url;
+  return '';
+ }
+ if(!filter_var($url,FILTER_VALIDATE_URL) || parse_url($url,PHP_URL_SCHEME)!=='https')return '';
+ return $url;
 }
 function egl_purchase($model){
  $url=$model['affiliate_url']??'';

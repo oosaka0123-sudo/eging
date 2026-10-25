@@ -47,6 +47,13 @@ try {
         if (!label.includes('製品写真') || !href?.startsWith('https://')) throw Error('bad official photo link for '+query);
       }
       if (await page.locator('.gear-compare-photo-guides').count() !== 0) throw Error('unrelated placeholder gallery was not removed');
+      const emptyPhotoSlots = await page.locator('.egl-product__visual-label').count();
+      const imageSlots = await page.locator('.egl-product__visual img').count();
+      if (emptyPhotoSlots + imageSlots !== expected) throw Error('every product must have photo or honest empty state');
+      for (const img of await page.locator('.egl-product__visual img').all()) {
+        if (!await img.evaluate(el=>el.complete && el.naturalWidth > 0)) throw Error('broken product photo');
+      }
+
       if ((await page.locator('body').innerText()).includes('商品データを更新中です')) throw Error('DB failure leaked into public comparison');
       if (await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+3)) throw Error('horizontal overflow compare at '+viewport.width);
       const link=await page.locator('article.egl-product a.egl-product__grid').first().getAttribute('href');
