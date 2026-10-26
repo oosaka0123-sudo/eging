@@ -18,6 +18,8 @@ function egl_photo($model){
  // Product image publication requires a reviewed source, explicit permission and safe image path.
  $url=$model['photo_url']??'';
  if(($model['photo_permission']??false)!==true || empty($model['photo_rights_source']))return '';
+ // Yahoo Shopping affiliate imagery can be shown only with a verified affiliate link.
+ if(($model['photo_license_type']??'direct')==='yahoo-affiliate' && egl_purchase($model)==='')return '';
  if(!is_string($url))return '';
  if(preg_match('#^/assets/img/products/[a-z0-9-]+\\.(?:webp|jpg|jpeg|png)$#',$url)){
   $path=realpath(__DIR__.'/../'.ltrim($url,'/'));

@@ -50,7 +50,10 @@ $yahooSearch='https://shopping.yahoo.co.jp/search?p='.rawurlencode($model['brand
    <?php if(!$purchase):?><p class="egl-note">※ Yahoo!へのリンクは販売商品を探すための通常の検索リンクであり、アフィリエイトリンクではありません。検索結果には別の号数・カラー・類似商品も含まれます。販売価格・在庫はリンク先で確認してください。</p><?php endif;?>
   </div>
   <div class="egl-detail-photo">
-    <?php if($photo):?><img src="<?=egl_h($photo)?>" alt="<?=egl_h($model['brand'].' '.$model['name'])?>の製品写真">
+    <?php if($photo):?>
+    <?php if($purchase):?><a href="<?=egl_h($purchase)?>" target="_blank" rel="nofollow sponsored noopener noreferrer" aria-label="<?=egl_h($model['brand'].' '.$model['name'])?>の購入先を見る（PR）"><?php endif;?>
+    <img src="<?=egl_h($photo)?>" alt="<?=egl_h($model['brand'].' '.$model['name'])?>の製品写真" loading="lazy" decoding="async">
+    <?php if($purchase):?></a><span class="egl-note">写真から購入先へ（PR）</span><?php endif;?>
     <?php else:?><div class="egl-detail-photo__empty"><strong>3.5 GO</strong><span>このモデルの製品写真は未掲載です。<br>正確な写真はメーカー公式ページで確認できます。</span><a class="egl-btn egl-btn--sm" href="<?=egl_h($model['source'])?>" target="_blank" rel="noopener noreferrer">公式の製品写真を見る ↗</a></div><?php endif;?>
   </div>
  </div>
