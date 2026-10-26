@@ -42,7 +42,9 @@ jobs:
       - name: Install Playwright
         run: |
           npm install --no-save playwright@1.55.0
-          npx playwright install --with-deps chromium
+          # Ubuntu GitHub runners already include Chromium system dependencies.
+          # Avoid apt-get stalls on runner image migration.
+          npx playwright install chromium
 
       - name: Start PHP server
         run: |
