@@ -51,7 +51,17 @@ try {
       const imageSlots = await page.locator('.egl-product__visual img').count();
       if (emptyPhotoSlots + imageSlots !== expected) throw Error('every product must have photo or honest empty state');
       for (const img of await page.locator('.egl-product__visual img').all()) {
+        await img.scrollIntoViewIfNeeded();
+        await img.evaluate(el=>el.decode?.().catch(()=>{}));
         if (!await img.evaluate(el=>el.complete && el.naturalWidth > 0)) throw Error('broken product photo');
+      }
+      // Licence gate: an unlicensed slot must never render an <img>.
+      if (await page.locator('.egl-product__visual[data-photo-status="not-licensed"] img').count() !== 0) throw Error('unlicensed slot shows a photo');
+      if (await page.locator('.egl-product__visual[data-photo-status="licensed"] img').count() !== imageSlots) throw Error('photo rendered outside licence gate');
+      // Layout: specs left, photo slot right, on both mobile and desktop.
+      for (const grid of await page.locator('a.egl-product__grid').all()) {
+        const [c,v]=await Promise.all([grid.locator('.egl-product__content').boundingBox(),grid.locator('.egl-product__visual').boundingBox()]);
+        if (!c || !v || c.x >= v.x) throw Error('card photo slot is not to the right of specs at '+viewport.width);
       }
 
       if ((await page.locator('body').innerText()).includes('商品データを更新中です')) throw Error('DB failure leaked into public comparison');
@@ -68,6 +78,21 @@ try {
       if(res.status()!==200)throw Error('detail '+model+' '+res.status());
       if(await page.locator('h1').count()!==1)throw Error('bad detail headline');
       if(await page.locator('.egl-detail-photo').count()!==1)throw Error('no product photo/place holder');
+      const detailImgs=page.locator('.egl-detail-photo img');
+      const emptyState=page.locator('.egl-detail-photo__empty');
+      if(await detailImgs.count()+await emptyState.count()!==1)throw Error('detail needs exactly one photo or honest empty state '+model);
+      if(await emptyState.count()===1){
+        const official=await emptyState.locator('a.egl-btn').getAttribute('href');
+        if(!official?.startsWith('https://'))throw Error('detail empty state lacks official photo link '+model);
+        if(await emptyState.locator('.egl-detail-photo__reason').count()!==1)throw Error('detail empty state lacks reason '+model);
+      }
+      // Photo-to-shop link exists only as a sponsored (PR) link, never a plain search.
+      for(const a of await page.locator('.egl-detail-photo a:has(img)').all()){
+        const rel=await a.getAttribute('rel')||'';
+        const href=await a.getAttribute('href')||'';
+        if(!rel.includes('sponsored')||!href.startsWith('https://')||href.includes('shopping.yahoo.co.jp/search'))throw Error('photo purchase link not a verified PR link '+model);
+      }
+      if(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+3))throw Error('horizontal overflow detail '+model+' at '+viewport.width);
     }
     const bad=await page.goto(base+'/gear-compare-item.php?model=not-a-product',{waitUntil:'domcontentloaded'});
     if(bad.status()!==404)throw Error('unknown model must return 404');
@@ -83,7 +108,7 @@ try {
     }
     await page.close();
   }
-  console.log('Condition-to-choice E2E checks passed for 390px/1440px, 4 scenes and 5 product details.');
+  console.log('Condition-to-choice E2E checks passed for 390px/1440px, 4 scenes, photo licence gate and 6 product details.');
 } finally {
   await browser.close();
 }

@@ -104,6 +104,8 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--egl-lime);outline-o
 .egl-detail-photo{min-height:325px;border:1px solid var(--egl-line);border-radius:16px;display:grid;place-items:center;text-align:center;background:repeating-linear-gradient(45deg,#0e2932,#0e2932 15px,#102e37 16px,#102e37 30px);padding:25px}
 .egl-detail-photo img{max-height:320px;width:100%;object-fit:contain}
 .egl-detail-photo__empty{display:grid;gap:16px;justify-items:center;color:var(--egl-dim);font-weight:700}
+.egl-detail-photo__reason{max-width:34em;font-size:.76rem;font-weight:500;line-height:1.7;color:#b6cdc6}
+.egl-detail-photo__reason a{color:var(--egl-mint);text-decoration:underline}
 .egl-detail-photo__empty strong{font-size:clamp(2rem,4vw,3.5rem);color:rgba(166,242,214,.25);font-weight:900}
 .egl-detail-specs{display:grid;grid-template-columns:1fr 1fr;margin:15px 0 0;gap:0 22px}
 .egl-detail-specs div{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid var(--egl-line);padding:13px 0}

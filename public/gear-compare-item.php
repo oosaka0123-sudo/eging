@@ -54,7 +54,8 @@ $yahooSearch='https://shopping.yahoo.co.jp/search?p='.rawurlencode($model['brand
     <?php if($purchase):?><a href="<?=egl_h($purchase)?>" target="_blank" rel="nofollow sponsored noopener noreferrer" aria-label="<?=egl_h($model['brand'].' '.$model['name'])?>の購入先を見る（PR）"><?php endif;?>
     <img src="<?=egl_h($photo)?>" alt="<?=egl_h($model['brand'].' '.$model['name'])?>の製品写真" loading="lazy" decoding="async">
     <?php if($purchase):?></a><span class="egl-note">写真から購入先へ（PR）</span><?php endif;?>
-    <?php else:?><div class="egl-detail-photo__empty"><strong>3.5 GO</strong><span>このモデルの製品写真は未掲載です。<br>正確な写真はメーカー公式ページで確認できます。</span><a class="egl-btn egl-btn--sm" href="<?=egl_h($model['source'])?>" target="_blank" rel="noopener noreferrer">公式の製品写真を見る ↗</a></div><?php endif;?>
+    <?php else:$photoTerms=egl_https($model['photo_terms']??'');?><div class="egl-detail-photo__empty"><strong>3.5 GO</strong><span>このモデルの製品写真は未掲載です。<br>正確な写真はメーカー公式ページで確認できます。</span><a class="egl-btn egl-btn--sm" href="<?=egl_h(egl_photo_page($model))?>" target="_blank" rel="noopener noreferrer">公式の製品写真を見る ↗</a>
+     <?php if(!empty($model['photo_block_reason'])):?><small class="egl-detail-photo__reason">未掲載の理由：<?=egl_h($model['photo_block_reason'])?><?php if($photoTerms):?> <a href="<?=egl_h($photoTerms)?>" target="_blank" rel="noopener noreferrer">利用条件 ↗</a><?php endif;?><?php if(!empty($model['photo_checked_at'])):?>（<?=egl_h($model['photo_checked_at'])?> 確認）<?php endif;?></small><?php endif;?></div><?php endif;?>
   </div>
  </div>
 </section>

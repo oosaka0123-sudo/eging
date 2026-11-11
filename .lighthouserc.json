@@ -5,7 +5,9 @@
       "startServerReadyPattern": "Development Server",
       "url": [
         "http://127.0.0.1:8081/",
-        "http://127.0.0.1:8081/simulator.php"
+        "http://127.0.0.1:8081/simulator.php",
+        "http://127.0.0.1:8081/compare.php",
+        "http://127.0.0.1:8081/gear-compare-item.php?model=shimano-clinch-deep-flashboost"
       ],
       "numberOfRuns": 1,
       "settings": {

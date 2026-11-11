@@ -30,6 +30,13 @@ function egl_photo($model){
  if(!filter_var($url,FILTER_VALIDATE_URL) || parse_url($url,PHP_URL_SCHEME)!=='https')return '';
  return $url;
 }
+function egl_https($url){
+ return is_string($url)&&filter_var($url,FILTER_VALIDATE_URL)&&parse_url($url,PHP_URL_SCHEME)==='https'?$url:'';
+}
+function egl_photo_page($model){
+ // Manufacturer page showing the exact model photo; falls back to the spec source.
+ return egl_https($model['photo_page']??'')?:$model['source'];
+}
 function egl_purchase($model){
  $url=$model['affiliate_url']??'';
  if(($model['affiliate_verified']??false)!==true||!filter_var($url,FILTER_VALIDATE_URL))return '';

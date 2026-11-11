@@ -1,6 +1,10 @@
 <?php
 // Manufacturer-listed 3.5-go Egi specifications, verified through 2026-10-23 (SHIMANO deep model).
 // Editorial comparison only. No product photography is reused without a license.
+// Photo rights audit 2026-11-11: none of the six models has a documented reuse license,
+// so photo_permission stays unset and egl_photo() keeps every card on the honest empty state.
+// photo_page = manufacturer page that shows the exact model photo; photo_terms = site terms reviewed.
+// Evidence table: docs/PRODUCT_PHOTO_EVIDENCE_2026-11-11.md
 return [
   'yamashita-k-basic' => [
     'brand'=>'YAMASHITA','name'=>'エギ王 K','size'=>'3.5号',
@@ -9,6 +13,10 @@ return [
     'reason'=>'約3秒/m。シャロー型より速く沈むので、幅広い水深を探る基準にしやすい。',
     'feature'=>'安定したフォール姿勢を目指すKシリーズの基本タイプ。',
     'source'=>'https://www.yamaria.co.jp/yamashita/product/detail/522',
+    'photo_page'=>'https://www.yamaria.co.jp/yamashita/product/detail/522',
+    'photo_status'=>'not-licensed','photo_checked_at'=>'2026-11-11',
+    'photo_terms'=>'https://www.yamaria.co.jp/about',
+    'photo_block_reason'=>'ヤマリアのサイト利用規定は、掲載データ（図形・デザイン等）の無断転載・複製を認めていません。掲載許諾を得るまで写真は表示しません。',
   ],
   'yamashita-k-shallow' => [
     'brand'=>'YAMASHITA','name'=>'エギ王 K シャロー','size'=>'3.5号',
@@ -17,6 +25,10 @@ return [
     'reason'=>'約6秒/mのゆっくりした沈下。根掛かりを避けながらフォール時間を伸ばしたい場面の候補。',
     'feature'=>'浅場向けのスローフォール設計。',
     'source'=>'https://www.yamaria.co.jp/yamashita/product/detail/523',
+    'photo_page'=>'https://www.yamaria.co.jp/yamashita/product/detail/523',
+    'photo_status'=>'not-licensed','photo_checked_at'=>'2026-11-11',
+    'photo_terms'=>'https://www.yamaria.co.jp/about',
+    'photo_block_reason'=>'ヤマリアのサイト利用規定は、掲載データ（図形・デザイン等）の無断転載・複製を認めていません。公式ページはシャロー（3.5号S）とスーパーシャロー（3.5号SS）の共通ページです。',
   ],
   'yamashita-k-super-shallow' => [
     'brand'=>'YAMASHITA','name'=>'エギ王 K スーパーシャロー','size'=>'3.5号',
@@ -25,14 +37,22 @@ return [
     'reason'=>'約8秒/mと今回の候補で最も沈下が遅い。浅瀬や短いフォールを繰り返す釣りに。',
     'feature'=>'シャローよりさらにゆっくり沈むタイプ。',
     'source'=>'https://www.yamaria.co.jp/yamashita/product/detail/523',
+    'photo_page'=>'https://www.yamaria.co.jp/yamashita/product/detail/523',
+    'photo_status'=>'not-licensed','photo_checked_at'=>'2026-11-11',
+    'photo_terms'=>'https://www.yamaria.co.jp/about',
+    'photo_block_reason'=>'ヤマリアのサイト利用規定は、掲載データ（図形・デザイン等）の無断転載・複製を認めていません。公式ページはシャロー（3.5号S）とスーパーシャロー（3.5号SS）の共通ページです。',
   ],
   'shimano-clinch-flashboost' => [
     'brand'=>'SHIMANO','name'=>'セフィア クリンチ フラッシュブースト','size'=>'3.5号',
     'weight'=>19.0,'sink'=>3.7,'type'=>'ノーマル','group'=>'standard',
     'use'=>'標準的な沈下速度とフラッシングを重視するとき',
     'reason'=>'参考値3.7秒/m。エギ王 K ベーシックよりゆっくり沈む。',
-    'feature'=>'フラッシュブーストを搭載したノーマルタイプ。',
+    'feature'=>'フラッシュブーストを搭載したノーマルタイプ。品番QE-X35U。',
     'source'=>'https://fish.shimano.com/ja-JP/product/lure/shoreeging/egi/a155f00000c5d08qaf.html',
+    'photo_page'=>'https://fish.shimano.com/ja-JP/product/lure/shoreeging/egi/a155f00000c5d08qaf.html',
+    'photo_status'=>'not-licensed','photo_checked_at'=>'2026-11-11',
+    'photo_terms'=>'https://www.shimano.com/jp/term_of_use.html',
+    'photo_block_reason'=>'シマノの利用条件は、書面による許可なくサイトの画像を他のウェブサイトで利用することを禁じています。許可を得るまで写真は表示しません。',
   ],
   'daiwa-amorous-joint' => [
     'brand'=>'DAIWA','name'=>'エメラルダス アモラスジョイント','size'=>'3.5号',
@@ -41,6 +61,10 @@ return [
     'reason'=>'公称3.75秒/m。クリンチと近い沈下速度でも、アクション構造は異なる。',
     'feature'=>'ジョイントボディが特徴のエギ。',
     'source'=>'https://www.daiwa.com/jp/product/thtjj6t',
+    'photo_page'=>'https://www.daiwa.com/jp/product/thtjj6t',
+    'photo_status'=>'not-licensed','photo_checked_at'=>'2026-11-11',
+    'photo_terms'=>'',
+    'photo_block_reason'=>'ダイワ（グローブライド）の公式サイトでは、製品画像の第三者転載を許可する規定を確認できませんでした（© GLOBERIDE, Inc. All Rights Reserved.）。許諾を得るまで写真は表示しません。',
   ],
   'shimano-clinch-deep-flashboost' => [
     'brand'=>'SHIMANO','name'=>'セフィア クリンチ ディープ フラッシュブースト','size'=>'3.5号',
@@ -49,5 +73,9 @@ return [
     'reason'=>'メーカー公称の参考値は約1.9秒/m。ノーマル（約3.7秒/m）より速く沈む設計で、深場と速い潮流に対応する候補。',
     'feature'=>'4g増量したシンカーとフラッシュブーストを備えたディープ専用モデル。品番QE-D35V。',
     'source'=>'https://fish.shimano.com/ja-JP/product/lure/shoreeging/egi/a155f00000ccfveqab.html',
+    'photo_page'=>'https://fish.shimano.com/ja-JP/product/lure/shoreeging/egi/a155f00000ccfveqab.html',
+    'photo_status'=>'not-licensed','photo_checked_at'=>'2026-11-11',
+    'photo_terms'=>'https://www.shimano.com/jp/term_of_use.html',
+    'photo_block_reason'=>'シマノの利用条件は、書面による許可なくサイトの画像を他のウェブサイトで利用することを禁じています。許可を得るまで写真は表示しません。',
   ],
 ];
